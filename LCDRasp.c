@@ -356,6 +356,18 @@ void helloWorld()
 
 }
 
+void counter()
+{
+	
+
+}
+
+void loop()
+{
+	
+score++;
+}
+
 int main(int argc, char *argv[])
 {
 	printf("Setting up pins..\n");
