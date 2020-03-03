@@ -33,14 +33,10 @@ void pinning()
 	pins.rs = 22;       // P1-03
 	pins.rw = 3;        // P1-05
 	pins.enable = 17;   // P1-07
-	pins.data[0] = 4;   // P1-11 LSB
-	pins.data[1] = 27;  // P1-13
-	pins.data[2] = 22;  // P1-15
-	pins.data[3] = 10;  // P1-19
-	pins.data[4] = 25;  // P1-21
-	pins.data[5] = 24;  // P1-23
-	pins.data[6] = 23;  // P1-29
-	pins.data[7] = 18;  // P1-31 MSB
+	pins.data[0] = 25;  // P1-11 LSB
+	pins.data[1] = 24;  // P1-13
+	pins.data[2] = 23;  // P1-15
+	pins.data[3] = 18;  // P1-19 MSB
 }
 
 //Exportando o pino
@@ -109,7 +105,7 @@ GPIODirection(int pin, int dir)
     return 0;
 }
 
-//Efetuando a leitura
+//Efetuando a leitura no pino
 static int
 GPIORead(int pin)
 {
@@ -163,7 +159,7 @@ GPIOWrite(int pin, int value)
 	return(0);
 }
 
-// Intrução de 8 bit + 2 de rs e rw
+/* Intrução de 8 bit + 2 de rs e rw
 void instruction(int rs, int rw, int data1, int data2, int data3, int data4, int data5, int data6, int data7, int data8)
 {
 	GPIOWrite(pins.enable, 0);
@@ -182,7 +178,7 @@ void instruction(int rs, int rw, int data1, int data2, int data3, int data4, int
 	usleep(1);
 	GPIOWrite(pins.enable, 0);
 	usleep(5);
-}
+}*/
 
 // Intrução de 4 bit + 2 de rs e rw
 void instruction4bit(int rs, int rw, int data1, int data2, int data3, int data4)
@@ -190,10 +186,10 @@ void instruction4bit(int rs, int rw, int data1, int data2, int data3, int data4)
 	GPIOWrite(pins.enable, 1);
 	GPIOWrite(pins.rs, rs);
 	GPIOWrite(pins.rw, rw);
-	GPIOWrite(pins.data[4], data4); //LSB
-	GPIOWrite(pins.data[5], data3);
-	GPIOWrite(pins.data[6], data2);
-	GPIOWrite(pins.data[7], data1); // MSB
+	GPIOWrite(pins.data[0], data4); //LSB
+	GPIOWrite(pins.data[1], data3);
+	GPIOWrite(pins.data[2], data2);
+	GPIOWrite(pins.data[3], data1); // MSB
 	usleep(500);
 	GPIOWrite(pins.enable, 0);
 	usleep(500);
@@ -212,7 +208,7 @@ void setupPins()
 	GPIODirection(pins.enable, OUT);
 
 	int i = 0;
-	for(i = 0; i < 8; i++)
+	for(i = 0; i < 4; i++)
 	{
 		GPIOExport(pins.data[i]);
 		GPIODirection(pins.data[i], OUT);
@@ -229,7 +225,7 @@ void unsetPins()
 	GPIOUnexport(pins.enable);
 
 	int i = 0;
-	for(i = 0; i < 8; i++)
+	for(i = 0; i < 4; i++)
 	{
 		GPIOUnexport(pins.data[i]);
 	}
@@ -240,52 +236,6 @@ void restartPins()
 {
 	unsetPins();
 	setupPins();
-}
-
-//Inicialização do LCD de 8bits
-void initialize8bitAntigo()
-{
-	usleep(150000); // in miliseconds
-	instruction(0,0,0,0,1,1,1,0,0,0); // Real Function Set 38H
-	usleep(150); // in microseconds
-	instruction(0,0,0,0,0,0,1,0,0,0); // Display on/off Control 08H
-	usleep(150); // in microseconds
-	instruction(0,0,0,0,0,0,0,1,1,0); // Entry Mode Set 06H
-	usleep(150); // in microseconds
-	instruction(0,0,0,0,0,0,0,0,0,1); // Clear Display 01H
-	usleep(3000); // in microseconds
-
-	/*Initializing end - display off*/
-
-	instruction(0,0,0,0,0,0,1,1,0,0); // Display on 0CH
-	instruction(0,0,0,0,0,0,1,1,1,0); // Display on 0EH
-	usleep(150); // in microseconds
-}
-
-//Inicialização do LCD de 8bits
-void initialize8bit()
-{
-	usleep(150000); // in miliseconds
-	instruction(0,0,0,0,1,1,0,0,0,0); // Function Set
-	usleep(5000); // in miliseconds
-	instruction(0,0,0,0,1,1,0,0,0,0);
-	usleep(150); // in microseconds
-	instruction(0,0,0,0,1,1,0,0,0,0);
-	usleep(150); // in microseconds
-	instruction(0,0,0,0,1,1,1,0,0,0); // Real Function Set 38H
-	usleep(150); // in microseconds
-	instruction(0,0,0,0,0,0,1,0,0,0); // Display on/off Control 08H
-	usleep(150); // in microseconds
-	instruction(0,0,0,0,0,0,0,0,0,1); // Clear Display 01H
-	usleep(3000); // in microseconds
-	instruction(0,0,0,0,0,0,0,1,1,0); // Entry Mode Set 06H
-	usleep(150); // in microseconds
-
-	/*Initializing end - display off*/
-
-	instruction(0,0,0,0,0,0,1,1,0,0); // Display on 0CH
-	instruction(0,0,0,0,0,0,1,1,1,0); // Display on 0EH
-	usleep(150); // in microseconds
 }
 
 //Inicialização do LCD de 4bits
@@ -315,7 +265,7 @@ void initialize4bitNovo()
 	instruction4bit(0,0,1,1,1,1); // Real Function Set 6H
 	usleep(100);
 	instruction4bit(0,0,0,1,0,0); // Real Function Set 0H
-	instruction4bit(0,0,0,0,0,1); // Real Function Set 6H
+	instruction4bit(0,0,0,0,0,1); // Real Function Set 1H
 	usleep(100); // in microseconds
 }
 
@@ -323,7 +273,7 @@ void initialize4bitNovo()
 void initialize4bit()
 {
 	usleep(100000); // in miliseconds
-	instruction4bit(0,0,0,0,1,1); // Function Set
+	instruction4bit(0,0,0,0,1,1); // Function Set 3H
 	usleep(5000); // in miliseconds
 	instruction4bit(0,0,0,0,1,1);
 	usleep(100); // in microseconds
@@ -341,7 +291,7 @@ void initialize4bit()
 	instruction4bit(0,0,1,0,0,0); // Real Function Set 8H
 	usleep(100); // in microseconds
 	instruction4bit(0,0,0,0,0,0); // Real Function Set 0H
-	instruction4bit(0,0,0,0,0,1); // Real Function Set 8H
+	instruction4bit(0,0,0,0,0,1); // Real Function Set 1H
 	usleep(3000); // in miliseconds
 	instruction4bit(0,0,0,0,0,0); // Real Function Set 0H
 	instruction4bit(0,0,0,1,1,0); // Real Function Set 6H
@@ -373,6 +323,7 @@ void helloWorld()
 
 }
 
+/*
 //Contador de Unidade 
 void counterUN()
 {
@@ -403,20 +354,14 @@ void loop()
 	
 score++;
 }
+*/
 
 //Onde tudo começa
 int main(int argc, char *argv[])
 {
 	printf("Setting up pins..\n");
 	setupPins();
-
-	printf("Initializing 8bit..\n");
-	initialize8bit();
-
-	helloWorld();
-
-	sleep(10);
-	restartPins();
+	
 	printf("Initializing 4bit..\n");
 	initialize4bit();
 	
@@ -426,11 +371,6 @@ int main(int argc, char *argv[])
 	initialize4bitNovo();
 
 	sleep(10);
-	restartPins();
-	printf("Initializing old one..\n");
-	initialize8bitAntigo();
-
-	helloWorld();
 	
 	printf("Ending program, unsetting pins...\n");
 	unsetPins();
