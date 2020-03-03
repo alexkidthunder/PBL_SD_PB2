@@ -15,32 +15,35 @@
 #define LOW  0
 #define HIGH 1
 
-//Make them global
+//Global
 struct gpio
-{
-	int rs;
+{	int rs;
 	int rw;
 	int enable;
 	int data[7];
 };
 
+int score = 0;
+
 struct gpio pins;
 
+//Pinagem 
 void pinning()
 {
 	pins.rs = 22;       // P1-03
-	pins.rw = 3;       // P1-05
+	pins.rw = 3;        // P1-05
 	pins.enable = 17;   // P1-07
-	pins.data[0] = 4; // P1-11 LSB
-	pins.data[1] = 27; // P1-13
-	pins.data[2] = 22; // P1-15
-	pins.data[3] = 10; // P1-19
+	pins.data[0] = 4;   // P1-11 LSB
+	pins.data[1] = 27;  // P1-13
+	pins.data[2] = 22;  // P1-15
+	pins.data[3] = 10;  // P1-19
 	pins.data[4] = 25;  // P1-21
-	pins.data[5] = 24; // P1-23
+	pins.data[5] = 24;  // P1-23
 	pins.data[6] = 23;  // P1-29
 	pins.data[7] = 18;  // P1-31 MSB
 }
 
+//Exportando o pino
 static int
 GPIOExport(int pin)
 {
@@ -61,6 +64,7 @@ GPIOExport(int pin)
 	return(0);
 }
 
+//Unexport do pino
 static int
 GPIOUnexport(int pin)
 {
@@ -80,6 +84,7 @@ GPIOUnexport(int pin)
 	return(0);
 }
 
+//Configurando o pino como INPUT ou OUTPUT
 static int
 GPIODirection(int pin, int dir)
 {
@@ -104,6 +109,7 @@ GPIODirection(int pin, int dir)
     return 0;
 }
 
+//Efetuando a leitura
 static int
 GPIORead(int pin)
 {
@@ -130,6 +136,7 @@ GPIORead(int pin)
 	return(atoi(value_str));
 }
 
+//Escrita no pino
 static int
 GPIOWrite(int pin, int value)
 {
@@ -156,6 +163,7 @@ GPIOWrite(int pin, int value)
 	return(0);
 }
 
+// Intrução de 8 bit + 2 de rs e rw
 void instruction(int rs, int rw, int data1, int data2, int data3, int data4, int data5, int data6, int data7, int data8)
 {
 	GPIOWrite(pins.enable, 0);
@@ -176,6 +184,7 @@ void instruction(int rs, int rw, int data1, int data2, int data3, int data4, int
 	usleep(5);
 }
 
+// Intrução de 4 bit + 2 de rs e rw
 void instruction4bit(int rs, int rw, int data1, int data2, int data3, int data4)
 {
 	GPIOWrite(pins.enable, 1);
@@ -190,6 +199,7 @@ void instruction4bit(int rs, int rw, int data1, int data2, int data3, int data4)
 	usleep(500);
 }
 
+// Configurando os Pinos
 void setupPins()
 {
  	pinning();
@@ -209,6 +219,7 @@ void setupPins()
 	}
 }
 
+// Desconfigurando os Pinos
 void unsetPins()
 {
 	pinning();
@@ -224,12 +235,14 @@ void unsetPins()
 	}
 }
 
+//Reset
 void restartPins()
 {
 	unsetPins();
 	setupPins();
 }
 
+//Inicialização do LCD de 8bits
 void initialize8bitAntigo()
 {
 	usleep(150000); // in miliseconds
@@ -249,6 +262,7 @@ void initialize8bitAntigo()
 	usleep(150); // in microseconds
 }
 
+//Inicialização do LCD de 8bits
 void initialize8bit()
 {
 	usleep(150000); // in miliseconds
@@ -274,6 +288,7 @@ void initialize8bit()
 	usleep(150); // in microseconds
 }
 
+//Inicialização do LCD de 4bits
 void initialize4bitNovo()
 {
 	usleep(100000); // in miliseconds
@@ -304,6 +319,7 @@ void initialize4bitNovo()
 	usleep(100); // in microseconds
 }
 
+//Inicialização do LCD de 4bits
 void initialize4bit()
 {
 	usleep(100000); // in miliseconds
@@ -337,13 +353,14 @@ void initialize4bit()
 	usleep(100); // in microseconds
 }
 
+//Função teste do Escrita
 void helloWorld()
 {
 	instruction(0,0,0,0,0,0,0,0,1,0); // HOME
 	usleep(3000); // in microseconds
 	instruction(0,0,0,0,0,1,0,1,0,0); // Cursor para direita 14H
 	usleep(3000); // in microseconds
-	instruction(0,0,0,0,0,0,1,1,1,1); // Cursor para direita 14H
+	instruction(0,0,0,0,0,0,1,1,1,1); // Liga display Liga Cursor
 	usleep(3000); // in microseconds
 	instruction(1,0,0,1,0,0,1,0,0,0); // Escrita de digito 48H - H
 	usleep(3000); // in microseconds
@@ -356,18 +373,38 @@ void helloWorld()
 
 }
 
-void counter()
+//Contador de Unidade 
+void counterUN()
 {
-	
+	instruction(0,0,0,0,0,0,0,0,1,0); // HOME
+	usleep(3000); // in microseconds
 
 }
 
+//Contador de Dezena
+void counterDE()
+{
+	instruction(0,0,0,0,0,0,0,0,1,0); // HOME
+	usleep(3000); // in microseconds
+
+}
+
+//Contador de Centena
+void counterCE()
+{
+	instruction(0,0,0,0,0,0,0,0,1,0); // HOME
+	usleep(3000); // in microseconds
+
+}
+
+// Junção dos Contadores
 void loop()
 {
 	
 score++;
 }
 
+//Onde tudo começa
 int main(int argc, char *argv[])
 {
 	printf("Setting up pins..\n");
@@ -394,13 +431,7 @@ int main(int argc, char *argv[])
 	initialize8bitAntigo();
 
 	helloWorld();
-	//int i = 0;
-	/*for(i = 0; i< 1000; i++)
-	{
-		helloWorld();
-		sleep(1);
-	}
-*/
+	
 	printf("Ending program, unsetting pins...\n");
 	unsetPins();
 }
