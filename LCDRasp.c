@@ -20,7 +20,7 @@ struct gpio
 {	int rs;
 	int rw;
 	int enable;
-	int data[7];
+	int data[3];
 };
 
 int score = 0;
@@ -33,14 +33,11 @@ void pinning()
 	pins.rs = 22;       // P1-03
 	pins.rw = 3;        // P1-05
 	pins.enable = 17;   // P1-07
-	pins.data[0] = 4; // P1-11 LSB
-	pins.data[1] = 27; // P1-13
-	pins.data[2] = 22; // P1-15
-	pins.data[3] = 10; // P1-19
-	pins.data[4] = 25;  // P1-21
-	pins.data[5] = 24; // P1-23
-	pins.data[6] = 23;  // P1-29
-	pins.data[7] = 18;  // P1-31 MSB
+	pins.data[0] = 25;	// P1-11 LSB
+	pins.data[1] = 24;	// P1-13
+	pins.data[2] = 23; 	// P1-15
+	pins.data[3] = 18; 	// P1-19
+
 }
 
 //Exportando o pino
@@ -208,7 +205,7 @@ void unsetPins()
 	GPIOUnexport(pins.enable);
 
 	int i = 0;
-	for(i = 0; i < 4 i++)
+	for(i = 0; i < 4; i++)
 	{
 		GPIOUnexport(pins.data[i]);
 	}
@@ -221,15 +218,15 @@ void restartPins()
 	setupPins();
 }
 
-//Inicialização do LCD de 4bits
+//Inicialização do LCD de 4bits 1 
 void initialize4bit()
 {
 	usleep(100000); // in miliseconds
 	instruction4bit(0,0,0,0,1,1); // Function Set 3H
 	usleep(5000); // in miliseconds
-	instruction4bit(0,0,0,0,1,1);
+	instruction4bit(0,0,0,0,1,1); // Function Set 3H
 	usleep(100); // in microseconds
-	instruction4bit(0,0,0,0,1,1);
+	instruction4bit(0,0,0,0,1,1); // Function Set 3H
 	usleep(100); // in microseconds
 	instruction4bit(0,0,0,0,1,0); // Real Function Set 2H
 	usleep(100); // in microseconds
@@ -243,7 +240,7 @@ void initialize4bit()
 	instruction4bit(0,0,1,0,0,0); // Real Function Set 8H
 	usleep(100); // in microseconds
 	instruction4bit(0,0,0,0,0,0); // Real Function Set 0H
-	instruction4bit(0,0,0,0,0,1); // Real Function Set 1H
+	instruction4bit(0,0,0,0,0,1); // Real Function Set 8H
 	usleep(3000); // in miliseconds
 	instruction4bit(0,0,0,0,0,0); // Real Function Set 0H
 	instruction4bit(0,0,0,1,1,0); // Real Function Set 6H
@@ -255,18 +252,28 @@ void initialize4bit()
 	usleep(100); // in microseconds
 }
 
+
 //Função teste do Escrita
 void helloWorld()
 {
-	instruction4bit(0,0,0,0,0,0,0,0,1,0); // HOME
+	instruction4bit(0,0,0,0,0,0); // HOME
+    instruction4bit(0,0,0,0,1,0);
 	usleep(3000); // in microseconds
-	instruction4bit(0,0,0,0,0,1,0,1,0,0); // Cursor para direita 14H
+	instruction4bit(0,0,0,0,0,1);
+    instruction4bit(0,0,0,1,0,0); // Cursor para direita 14H
 	usleep(3000); // in microseconds
-	instruction4bit(0,0,0,0,0,0,1,1,1,1); // Liga display Liga Cursor
+	instruction4bit(0,0,0,0,0,0);
+    instruction4bit(0,0,1,1,1,1); // Cursor para direita 14H
 	usleep(3000); // in microseconds
-	instruction4bit(1,0,0,1,0,0,1,0,0,0); // Escrita de digito 48H - H
+	instruction4bit(1,0,0,1,0,0);
+    instruction4bit(1,0,1,0,0,0); // Escrita de digito 48H - H
 	usleep(3000); // in microseconds
-
+	instruction4bit(0,0,0,0,0,1);
+    instruction4bit(0,0,0,1,0,0); // Cursor para direita 14H
+	usleep(3000); // in microseconds
+	instruction4bit(1,0,0,1,0,0);
+    instruction4bit(1,0,0,1,0,1); // Escrita de digito 45H - E
+	usleep(3000); // in microseconds
 }
 
 /*
@@ -306,17 +313,13 @@ score++;
 int main(int argc, char *argv[])
 {
 	printf("Setting up pins..\n");
-	setupPins();
-	
-	printf("Initializing 8bit..\n");
-	
-	initialize8bit();
-	
+	setupPins();	
 	sleep(10);
-	restartPins();
-
-	sleep(10);
-	
+	printf("Initializing LCD in 4bit..\n");	
+	initialize4bitLinha();
+	helloWorld();	
+	printf("Resting...\n");
+	sleep(10);	
 	printf("Ending program, unsetting pins...\n");
 	unsetPins();
 }
