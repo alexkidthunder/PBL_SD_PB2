@@ -1,4 +1,5 @@
 /* 
+	Aplicação do PB2 no Raspberry
  */
 
 #include <sys/stat.h>
@@ -23,21 +24,18 @@ struct gpio
 	int data[3];
 };
 
-int score = 0;
-
 struct gpio pins;
 
 //Pinagem 
-void pinning()
+void pinagem()
 {
-	pins.rs = 22;       // P1-03
-	pins.rw = 3;        // P1-05
-	pins.enable = 17;   // P1-07
-	pins.data[0] = 25;	// P1-11 LSB
-	pins.data[1] = 24;	// P1-13
-	pins.data[2] = 23; 	// P1-15
-	pins.data[3] = 18; 	// P1-19
-
+	pins.rs = 22;       // Register Select
+	pins.rw = 3;        // Register Write
+	pins.enable = 17;   // Enable
+	pins.data[0] = 25;	// Data 4 em 8 bit    LSB
+	pins.data[1] = 24;	// Data 5 em 8 bit
+	pins.data[2] = 23; 	// Data 6 em 8 bit
+	pins.data[3] = 18; 	// Data 7 em 8 bit    MSB
 }
 
 //Exportando o pino
@@ -119,12 +117,12 @@ GPIORead(int pin)
 	snprintf(path, VALUE_MAX, "/sys/class/gpio/gpio%d/value", pin);
 	fd = open(path, O_RDONLY);
 	if (-1 == fd) {
-		fprintf(stderr, "Failed to open gpio value for reading!\n");
+		fprintf(stderr, "Falha em Abrir a gpio para a Leitura!\n");
 		return(-1);
 	}
 
 	if (-1 == read(fd, value_str, 3)) {
-		fprintf(stderr, "Failed to read value!\n");
+		fprintf(stderr, "Falha na leitura do Valor!\n");
 		return(-1);
 	}
 
@@ -147,12 +145,12 @@ GPIOWrite(int pin, int value)
 	snprintf(path, VALUE_MAX, "/sys/class/gpio/gpio%d/value", pin);
 	fd = open(path, O_WRONLY);
 	if (-1 == fd) {
-		fprintf(stderr, "Failed to open gpio value for writing!\n");
+		fprintf(stderr, "Falha em Abrir a gpio para Escrita!\n");
 		return(-1);
 	}
 
 	if (1 != write (fd, ((value == HIGH)?"1":"0"), 1)) {
-		fprintf(stderr, "Failed to write value!\n");
+		fprintf(stderr, "Falha em escrever o Valor!\n");
 		return(-1);
 	}
 
@@ -178,7 +176,7 @@ void instruction4bit(int rs, int rw, int data1, int data2, int data3, int data4)
 // Configurando os Pinos
 void setupPins()
 {
- 	pinning();
+ 	pinagem();
 
 	GPIOExport(pins.rs);
 	GPIODirection(pins.rs, OUT);
@@ -198,7 +196,7 @@ void setupPins()
 // Desconfigurando os Pinos
 void unsetPins()
 {
-	pinning();
+	pinagem();
 
 	GPIOUnexport(pins.rs);
 	GPIOUnexport(pins.rw);
@@ -209,13 +207,6 @@ void unsetPins()
 	{
 		GPIOUnexport(pins.data[i]);
 	}
-}
-
-//Reset
-void restartPins()
-{
-	unsetPins();
-	setupPins();
 }
 
 //Inicialização do LCD de 4bits 1 
@@ -231,7 +222,7 @@ void initialize4bit()
 	instruction4bit(0,0,0,0,1,0); // Real Function Set 2H
 	usleep(100); // in microseconds
 
-	/*The LCD controller is now in the 4-bit mode.*/
+	/*Controlador do LCD configurado no modo de 4-bit.*/
 
 	instruction4bit(0,0,0,0,1,0); // Real Function Set 2H
 	instruction4bit(0,0,1,0,0,0); // Real Function Set 8H
@@ -246,7 +237,7 @@ void initialize4bit()
 	instruction4bit(0,0,0,1,1,0); // Real Function Set 6H
 	usleep(100); // in microseconds
 
-	/*Initializing end - display off*/
+	/*Finalizando - display off*/
 	instruction4bit(0,0,0,0,0,0); // Real Function Set 0H
 	instruction4bit(0,0,1,1,0,0); // Real Function Set 6H
 	usleep(100); // in microseconds
@@ -254,7 +245,7 @@ void initialize4bit()
 
 
 //Função teste do Escrita
-void helloWorld()
+void testeTexto()
 {
 	instruction4bit(0,0,0,0,0,0); // HOME
     instruction4bit(0,0,0,0,1,0);
@@ -263,62 +254,61 @@ void helloWorld()
     instruction4bit(0,0,0,1,0,0); // Cursor para direita 14H
 	usleep(3000); // in microseconds
 	instruction4bit(0,0,0,0,0,0);
-    instruction4bit(0,0,1,1,1,1); // Cursor para direita 14H
+    instruction4bit(0,0,1,1,1,1); // Liga o Display, Liga o Cursor piscando
 	usleep(3000); // in microseconds
 	instruction4bit(1,0,0,1,0,0);
-    instruction4bit(1,0,1,0,0,0); // Escrita de digito 48H - H
+    instruction4bit(1,0,1,0,0,1); // Escrita de digito 48H - I
 	usleep(3000); // in microseconds
 	instruction4bit(0,0,0,0,0,1);
-    instruction4bit(0,0,0,1,0,0); // Cursor para direita 14H
+    instruction4bit(0,0,0,1,0,0); // Mensagem para direita 14H
+	usleep(3000); // in microseconds
+	instruction4bit(1,0,0,1,0,0);
+    instruction4bit(1,0,0,1,0,1); // Escrita de digito 45H - E
+	usleep(3000); // in microseconds
+	instruction4bit(0,0,0,0,0,1);
+    instruction4bit(0,0,0,1,0,0); // Mensagem para direita 14H
+	usleep(3000); // in microseconds
+	instruction4bit(1,0,0,1,0,0);
+    instruction4bit(1,0,1,0,0,1); // Escrita de digito 48H - I
+	usleep(3000); // in microseconds
+	instruction4bit(0,0,0,0,0,1);
+    instruction4bit(0,0,0,1,0,0); // Mensagem para direita 14H
 	usleep(3000); // in microseconds
 	instruction4bit(1,0,0,1,0,0);
     instruction4bit(1,0,0,1,0,1); // Escrita de digito 45H - E
 	usleep(3000); // in microseconds
 }
 
-/*
+
 //Contador de Unidade 
-void counterUN()
+void score()
 {
-	instruction(0,0,0,0,0,0,0,0,1,0); // HOME
+	instruction4bit(0,0,0,0,0,1);
+    instruction4bit(0,0,0,1,0,0); // Mensagem para direita 14H
 	usleep(3000); // in microseconds
-
-}
-
-//Contador de Dezena
-void counterDE()
-{
-	instruction(0,0,0,0,0,0,0,0,1,0); // HOME
+	instruction4bit(0,0,0,0,0,1);
+    instruction4bit(0,0,0,1,0,0); // Mensagem para direita 14H
 	usleep(3000); // in microseconds
-
-}
-
-//Contador de Centena
-void counterCE()
-{
-	instruction(0,0,0,0,0,0,0,0,1,0); // HOME
+	instruction4bit(0,0,0,0,0,1);
+    instruction4bit(0,0,0,1,0,0); // Mensagem para direita 14H
 	usleep(3000); // in microseconds
+	instruction4bit(0,0,0,0,1,1);
+    instruction4bit(0,0,0,0,0,0); // Score 0
 
 }
 
-// Junção dos Contadores
-void loop()
-{
-	
-score++;
-}
-*/
 
 //Onde tudo começa
 int main(int argc, char *argv[])
 {
-	printf("Setting up pins..\n");
+	printf("Configurando a pinagem...\n");
 	setupPins();	
 	sleep(10);
-	printf("Initializing LCD in 4bit..\n");	
+	printf("Inicializando o LCD...\n");	
 	initialize4bitLinha();
-	helloWorld();	
-	printf("Resting...\n");
+	testeTexto();
+	printf("Teste Score...\n");
+	score();	
 	sleep(10);	
 	printf("Ending program, unsetting pins...\n");
 	unsetPins();
