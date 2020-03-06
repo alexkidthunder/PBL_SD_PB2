@@ -83,24 +83,24 @@ GPIOUnexport(int pin)
 static int
 GPIODirection(int pin, int dir)
 {
-	int arquive = 0;
+	int arquivo = 0;
 	char buffer[3];
 	char path[35];
 
     snprintf(path, 35, "/sys/class/gpio/gpio%d/direction", pin);
-    arquive = open (path, O_WRONLY);
-    if (arquive==-1)
+    arquivo = open (path, O_WRONLY);
+    if (arquivo==-1)
     {
     	return -1;
     }
     snprintf(buffer, 3, "%d", pin);
-    if (write( arquive, ((dir == IN)?"in":"out"), 3 )==-1)
+    if (write( arquivo, ((dir == IN)?"in":"out"), 3 )==-1)
     {
-    	close(arquive);
+    	close(arquivo);
     	return -1;
     }
 
-    close(arquive);
+    close(arquivo);
     return 0;
 }
 
@@ -250,7 +250,7 @@ void testeTexto()
     instruction4bit(0,0,0,0,1,0);
 	usleep(3000); // em microsegundos
 	instruction4bit(0,0,0,0,0,1);
-    instruction4bit(0,0,0,1,0,0); // 		Mensagem para direita 14H
+    instruction4bit(0,0,0,1,0,0); // 		Cursor para direita 14H
 	usleep(3000); // em microsegundos
 	instruction4bit(0,0,0,0,0,0);
     instruction4bit(0,0,1,1,1,1); // Liga o Display, Liga o Cursor piscando
@@ -259,19 +259,19 @@ void testeTexto()
     instruction4bit(1,0,0,0,0,0); // Escrita de digito 48H - P
 	usleep(3000); // em microsegundos
 	instruction4bit(0,0,0,0,0,1);
-    instruction4bit(0,0,0,1,0,0); // 		Mensagem para direita 14H
+    instruction4bit(0,0,0,1,0,0); // 		Cursor para direita 14H
 	usleep(3000); // em microsegundos
 	instruction4bit(1,0,0,1,1,0);
     instruction4bit(1,0,0,0,1,0); // Escrita de digito 45H - r
 	usleep(3000); // em microsegundos
 	instruction4bit(0,0,0,0,0,1);
-    instruction4bit(0,0,0,1,0,0); // 		Mensagem para direita 14H
+    instruction4bit(0,0,0,1,0,0); // 		Cursor para direita 14H
 	usleep(3000); // em microsegundos
 	instruction4bit(1,0,0,1,1,0);
     instruction4bit(1,0,0,1,0,1); // Escrita de digito 45H - e
 	usleep(3000); // em microsegundos
 	instruction4bit(0,0,0,0,0,1);
-    instruction4bit(0,0,0,1,0,0); // 		Mensagem para direita 14H
+    instruction4bit(0,0,0,1,0,0); // 		Cursor para direita 14H
 	usleep(3000); // em microsegundos
 	instruction4bit(1,0,0,1,1,1);
     instruction4bit(1,0,0,0,1,1); // Escrita de digito 45H - s
@@ -280,7 +280,7 @@ void testeTexto()
     instruction4bit(1,0,0,0,1,1); // Escrita de digito 45H - s
 	usleep(3000); // em microsegundos
 	instruction4bit(0,0,0,0,0,1);
-    instruction4bit(0,0,0,1,0,0); // 		Mensagem para direita 14H
+    instruction4bit(0,0,0,1,0,0); // 		Cursor para direita 14H
 	usleep(3000); // em microsegundos
 	instruction4bit(1,0,0,1,0,1);
     instruction4bit(1,0,0,0,1,1); // Escrita de digito 45H - S
@@ -315,35 +315,68 @@ void testeBoneco()
 	
 }
 
-// Teste de posicionamento do score
-void pontuacao()
+//Numeracao
+static int 
+numeracao(int numero)
 {
-	switch (score)
+	switch (numero)
 	{
-	case unidade:
+		case 0:
+	instruction4bit(0,0,0,0,1,1); 
+    instruction4bit(0,0,0,0,0,0); // Numero 0
      
 	break;
-
-	case dezena:
+		case 1:
+	instruction4bit(0,0,0,0,1,1); 
+    instruction4bit(0,0,0,0,0,1); // Numero 1
+     
+	break;	
+		case 2:
+	instruction4bit(0,0,0,0,1,1); 
+    instruction4bit(0,0,0,0,1,0); // Numero 2
+     
+	break;
+		case 3:
+	instruction4bit(0,0,0,0,1,1); 
+    instruction4bit(0,0,0,0,1,1); // Numero 3
+     
+	break;
+		case 4:
+	instruction4bit(0,0,0,0,1,1); 
+    instruction4bit(0,0,0,1,0,0); // Numero 4
+     
+	break;
+		case 5:
+	instruction4bit(0,0,0,0,1,1); 
+    instruction4bit(0,0,0,1,0,1); // Numero 5
+     
+	break;
+		case 6:
+	instruction4bit(0,0,0,0,1,1); 
+    instruction4bit(0,0,0,1,1,0); // Numero 6
+     
+	break;
+		case 7:
+	instruction4bit(0,0,0,0,1,1); 
+    instruction4bit(0,0,0,1,1,1); // Numero 7
+     
+	break;
+		case 8:
+	instruction4bit(0,0,0,0,1,1); 
+    instruction4bit(0,0,1,0,0,0); // Numero 8
+     
+	break;
+		case 9:
+	instruction4bit(0,0,0,0,1,1); 
+    instruction4bit(0,0,1,0,0,1); // Numero 9
      
 	break;
 
 	default
-     Instruções;
+     printf("Algo de errado não esta certo com os numeros\n");
+	 return 0;
 	}
 	
-	instruction4bit(0,0,0,0,0,1);
-    instruction4bit(0,0,0,1,0,0); // Mensagem para direita 14H
-	usleep(3000); // em microsegundos
-	instruction4bit(0,0,0,0,0,1);
-    instruction4bit(0,0,0,1,0,0); // Mensagem para direita 14H
-	usleep(3000); // em microsegundos
-	instruction4bit(0,0,0,0,0,1);
-    instruction4bit(0,0,0,1,0,0); // Mensagem para direita 14H
-	usleep(3000); // em microsegundos
-	instruction4bit(0,0,0,0,1,1);
-    instruction4bit(0,0,0,0,0,0); // Score numero 0
-
 }
 
 //Configuração do Boneco
@@ -401,16 +434,31 @@ void obstaculo()
 }
 
 
-// Matriz que percorre as 32 posicoes do LCD att seus componentes
+// Matriz que percorre as 32 posicoes do LCD att seus componentes #Opc01
 void matrizLCD()
 {//Percorre de 0 a 15, quando pula mais uma posicao ele vai pra linha de baixo
 	instruction4bit(0,0,0,0,0,0);
     instruction4bit(0,0,0,0,1,0); // Home Cursor
 }
 
+
 // Onde tudo começa
+// FPS 410 milisegundos 
 int main(int argc, char *argv[])
 {
+	int state = 0;
+	if(state == 0)
+	{
+		printf("Tela de Inicio\n");
+	}
+	else if(state == 1)
+	{
+		printf("jogatina\n");
+	}
+	else if(state == 2)
+	{
+		printf("Game Over\n");
+	}
 	printf("Configurando a pinagem....\n");
 	setupPins();	
 	sleep(10);
