@@ -1,5 +1,5 @@
 /* 
-	Aplicação do PB2 no Raspberry
+	Aplicacao do PB2 no Raspberry
  */
 
 #include <sys/stat.h>
@@ -138,7 +138,7 @@ GPIOWrite(int pin, int value)
 	usleep(120);
 	static const char s_values_str[] = "01";
 
-	//printf("Pino: %d;\nValor: %d;\n", pin, value);
+	//printf("Pino: %d;\nValor: %d;\n", pin, value); //Checando valor do pino
 	char path[VALUE_MAX];
 	int fd;
 
@@ -158,13 +158,13 @@ GPIOWrite(int pin, int value)
 	return(0);
 }
 
-// Intrução de 4 bit + 2 de rs e rw
+// Intrucao de 4 bit com 2 de rs e rw
 void instruction4bit(int rs, int rw, int data1, int data2, int data3, int data4)
 {
 	GPIOWrite(pins.enable, 1);
 	GPIOWrite(pins.rs, rs);
 	GPIOWrite(pins.rw, rw);
-	GPIOWrite(pins.data[0], data4); //LSB
+	GPIOWrite(pins.data[0], data4); //	LSB
 	GPIOWrite(pins.data[1], data3);
 	GPIOWrite(pins.data[2], data2);
 	GPIOWrite(pins.data[3], data1); // MSB
@@ -209,7 +209,7 @@ void unsetPins()
 	}
 }
 
-//Inicialização do LCD de 4bits 1 
+//Inicializacao do LCD de 4bits 1 
 void initialize4bit()
 {
 	usleep(100000); // in miliseconds
@@ -219,79 +219,98 @@ void initialize4bit()
 	usleep(100); // in microseconds
 	instruction4bit(0,0,0,0,1,1); // Function Set 3H
 	usleep(100); // in microseconds
-	instruction4bit(0,0,0,0,1,0); // Real Function Set 2H
+	instruction4bit(0,0,0,0,1,0); // Function Set 2H
 	usleep(100); // in microseconds
 
 	/*Controlador do LCD configurado no modo de 4-bit.*/
 
-	instruction4bit(0,0,0,0,1,0); // Real Function Set 2H
-	instruction4bit(0,0,1,0,0,0); // Real Function Set 8H
+	instruction4bit(0,0,0,0,1,0); // Function Set 2H
+	instruction4bit(0,0,1,0,0,0); // Function Set 8H
 	usleep(100); // in microseconds
-	instruction4bit(0,0,0,0,0,0); // Real Function Set 0H
-	instruction4bit(0,0,1,0,0,0); // Real Function Set 8H
+	instruction4bit(0,0,0,0,0,0); // Function Set 0H
+	instruction4bit(0,0,1,0,0,0); // Function Set 8H
 	usleep(100); // in microseconds
-	instruction4bit(0,0,0,0,0,0); // Real Function Set 0H
-	instruction4bit(0,0,0,0,0,1); // Real Function Set 8H
+	instruction4bit(0,0,0,0,0,0); // Function Set 0H
+	instruction4bit(0,0,0,0,0,1); // Function Set 1H
 	usleep(3000); // in miliseconds
-	instruction4bit(0,0,0,0,0,0); // Real Function Set 0H
-	instruction4bit(0,0,0,1,1,0); // Real Function Set 6H
+	instruction4bit(0,0,0,0,0,0); // Function Set 0H
+	instruction4bit(0,0,0,1,1,0); // Function Set 6H
 	usleep(100); // in microseconds
 
-	/*Finalizando - display off*/
-	instruction4bit(0,0,0,0,0,0); // Real Function Set 0H
-	instruction4bit(0,0,1,1,0,0); // Real Function Set 6H
+	instruction4bit(0,0,0,0,0,0); // Function Set 0H
+	instruction4bit(0,0,1,1,0,0); // Function Set CH - Liga o Display, Desliga o Cursor sem piscar
 	usleep(100); // in microseconds
 }
 
 
-//Função teste do Escrita
+//Funcao teste do Escrita
 void testeTexto()
 {
-	instruction4bit(0,0,0,0,0,0); // HOME
+	instruction4bit(0,0,0,0,0,0); // Home p/ Cursor
     instruction4bit(0,0,0,0,1,0);
-	usleep(3000); // in microseconds
+	usleep(3000); // em microsegundos
 	instruction4bit(0,0,0,0,0,1);
-    instruction4bit(0,0,0,1,0,0); // Cursor para direita 14H
-	usleep(3000); // in microseconds
+    instruction4bit(0,0,0,1,0,0); // 		Mensagem para direita 14H
+	usleep(3000); // em microsegundos
 	instruction4bit(0,0,0,0,0,0);
     instruction4bit(0,0,1,1,1,1); // Liga o Display, Liga o Cursor piscando
-	usleep(3000); // in microseconds
-	instruction4bit(1,0,0,1,0,0);
-    instruction4bit(1,0,1,0,0,1); // Escrita de digito 48H - I
-	usleep(3000); // in microseconds
+	usleep(3000); // em microsegundos
+	instruction4bit(1,0,0,1,0,1);
+    instruction4bit(1,0,0,0,0,0); // Escrita de digito 48H - P
+	usleep(3000); // em microsegundos
 	instruction4bit(0,0,0,0,0,1);
-    instruction4bit(0,0,0,1,0,0); // Mensagem para direita 14H
-	usleep(3000); // in microseconds
-	instruction4bit(1,0,0,1,0,0);
-    instruction4bit(1,0,0,1,0,1); // Escrita de digito 45H - E
-	usleep(3000); // in microseconds
+    instruction4bit(0,0,0,1,0,0); // 		Mensagem para direita 14H
+	usleep(3000); // em microsegundos
+	instruction4bit(1,0,0,1,1,0);
+    instruction4bit(1,0,0,0,1,0); // Escrita de digito 45H - r
+	usleep(3000); // em microsegundos
 	instruction4bit(0,0,0,0,0,1);
-    instruction4bit(0,0,0,1,0,0); // Mensagem para direita 14H
-	usleep(3000); // in microseconds
-	instruction4bit(1,0,0,1,0,0);
-    instruction4bit(1,0,1,0,0,1); // Escrita de digito 48H - I
-	usleep(3000); // in microseconds
+    instruction4bit(0,0,0,1,0,0); // 		Mensagem para direita 14H
+	usleep(3000); // em microsegundos
+	instruction4bit(1,0,0,1,1,0);
+    instruction4bit(1,0,0,1,0,1); // Escrita de digito 45H - e
+	usleep(3000); // em microsegundos
 	instruction4bit(0,0,0,0,0,1);
-    instruction4bit(0,0,0,1,0,0); // Mensagem para direita 14H
-	usleep(3000); // in microseconds
-	instruction4bit(1,0,0,1,0,0);
-    instruction4bit(1,0,0,1,0,1); // Escrita de digito 45H - E
-	usleep(3000); // in microseconds
+    instruction4bit(0,0,0,1,0,0); // 		Mensagem para direita 14H
+	usleep(3000); // em microsegundos
+	instruction4bit(1,0,0,1,1,1);
+    instruction4bit(1,0,0,0,1,1); // Escrita de digito 45H - s
+	usleep(3000); // em microsegundos
+	instruction4bit(1,0,0,1,1,1);
+    instruction4bit(1,0,0,0,1,1); // Escrita de digito 45H - s
+	usleep(3000); // em microsegundos
+	instruction4bit(0,0,0,0,0,1);
+    instruction4bit(0,0,0,1,0,0); // 		Mensagem para direita 14H
+	usleep(3000); // em microsegundos
+	instruction4bit(1,0,0,1,0,1);
+    instruction4bit(1,0,0,0,1,1); // Escrita de digito 45H - S
+	usleep(3000); // em microsegundos
+	instruction4bit(1,0,0,1,1,0);
+    instruction4bit(1,0,0,1,0,0); // Escrita de digito 45H - t
+	usleep(3000); // em microsegundos
+	instruction4bit(1,0,0,1,1,0);
+    instruction4bit(1,0,0,0,0,1); // Escrita de digito 45H - a
+	instruction4bit(1,0,0,1,1,0);
+    instruction4bit(1,0,0,0,1,0); // Escrita de digito 45H - r
+	usleep(3000); // em microsegundos
+	instruction4bit(1,0,0,1,1,0);
+    instruction4bit(1,0,0,1,0,0); // Escrita de digito 45H - t
+	usleep(3000); // em microsegundos
 }
 
 
-//Contador de Unidade 
+//Teste de posicionamento do score
 void score()
 {
 	instruction4bit(0,0,0,0,0,1);
     instruction4bit(0,0,0,1,0,0); // Mensagem para direita 14H
-	usleep(3000); // in microseconds
+	usleep(3000); // em microsegundos
 	instruction4bit(0,0,0,0,0,1);
     instruction4bit(0,0,0,1,0,0); // Mensagem para direita 14H
-	usleep(3000); // in microseconds
+	usleep(3000); // em microsegundos
 	instruction4bit(0,0,0,0,0,1);
     instruction4bit(0,0,0,1,0,0); // Mensagem para direita 14H
-	usleep(3000); // in microseconds
+	usleep(3000); // em microsegundos
 	instruction4bit(0,0,0,0,1,1);
     instruction4bit(0,0,0,0,0,0); // Score 0
 
@@ -301,15 +320,15 @@ void score()
 //Onde tudo começa
 int main(int argc, char *argv[])
 {
-	printf("Configurando a pinagem...\n");
+	printf("Configurando a pinagem....\n");
 	setupPins();	
 	sleep(10);
-	printf("Inicializando o LCD...\n");	
+	printf("Inicializando o LCD....\n");	
 	initialize4bitLinha();
 	testeTexto();
-	printf("Teste Score...\n");
+	printf("Teste Score....\n");
 	score();	
 	sleep(10);	
-	printf("Ending program, unsetting pins...\n");
+	printf("Finalizando programa, desconfigurando os Pinos....\n");
 	unsetPins();
 }
