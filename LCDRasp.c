@@ -473,14 +473,14 @@ int main(int argc, char *argv[])
 	int state = 0;
 	if(state == 0)
 	{// Espera para apertar o botao e comecar o jogo
-		printf("Tela de Inicio\n");
+		printf("Tela de Inicio\n"); // Comecar Piscando
 	}
 	else if(state == 1)
 	{// Durante a aplicacao
-		printf("jogatina\n");
+		printf("jogatina\n"); //Dchecar movimentacao do boneco e deslocamento do obstaculo
 	}
 	else if(state == 2)
-	{// Aconteceu a colisao do boneco com o obstaculo
+	{// Aconteceu a colisao do boneco com o obstaculo e pausa
 		printf("Game Over\n");
 	}
 	printf("Configurando a pinagem....\n");
