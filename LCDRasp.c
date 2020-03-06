@@ -307,15 +307,31 @@ void testeBoneco()
 	instruction4bit(0,0,0,0,0,0); 
     instruction4bit(0,0,0,0,0,1);// Clear Display
 	usleep(3000); // em microsegundos
+	
 	/*Acesso aos Caracteres Especiais*/
+	
 	instruction4bit(0,0,0,0,0,0); 
     instruction4bit(0,0,0,0,0,0);// Display primeiro Caracter Customizado 00H
 	
 }
 
 // Teste de posicionamento do score
-void score()
+void pontuacao()
 {
+	switch (score)
+	{
+	case unidade:
+     
+	break;
+
+	case dezena:
+     
+	break;
+
+	default
+     Instruções;
+	}
+	
 	instruction4bit(0,0,0,0,0,1);
     instruction4bit(0,0,0,1,0,0); // Mensagem para direita 14H
 	usleep(3000); // em microsegundos
@@ -330,7 +346,7 @@ void score()
 
 }
 
-//Configuração HEX para BIN
+//Configuração do Boneco
 void boneco()
 {
 	/*Acessar a CGROM*/
@@ -357,6 +373,39 @@ void boneco()
     instruction4bit(0,0,0,0,1,1); // 13H	
 }
 
+//Configuração do obstaculo
+void obstaculo()
+{
+	/*Acessar a CGROM*/
+	instruction4bit(0,0,0,1,0,0);
+    instruction4bit(0,0,0,0,0,0); // Regiao da Memoria pra Caracteres Esp. 40H
+	
+	/*Caracter especial do obstaculo*/
+	
+	instruction4bit(0,0,0,0,0,1);
+    instruction4bit(0,0,1,1,1,1); // 1FH
+	instruction4bit(0,0,0,0,0,1);
+    instruction4bit(0,0,1,1,1,1); // 1FH
+	instruction4bit(0,0,0,0,0,1);
+    instruction4bit(0,0,1,1,1,1); // 1FH
+	instruction4bit(0,0,0,0,0,1);
+    instruction4bit(0,0,1,1,1,1); // 1FH
+	instruction4bit(0,0,0,0,0,1);
+    instruction4bit(0,0,1,1,1,1); // 1FH
+	instruction4bit(0,0,0,0,0,1);
+    instruction4bit(0,0,1,1,1,1); // 1FH
+	instruction4bit(0,0,0,0,0,1);
+    instruction4bit(0,0,1,1,1,1); // 1FH
+	instruction4bit(0,0,0,0,0,1);
+    instruction4bit(0,0,1,1,1,1); // 1FH
+}
+
+
+// Matriz que percorre as 32 posicoes do LCD att seus componentes
+void matrizLCD()
+{
+	
+}
 
 // Onde tudo começa
 int main(int argc, char *argv[])
@@ -364,12 +413,15 @@ int main(int argc, char *argv[])
 	printf("Configurando a pinagem....\n");
 	setupPins();	
 	sleep(10);
+	
 	printf("Inicializando o LCD....\n");	
 	initialize4bitLinha();
 	testeTexto();
+	
 	printf("Teste Score....\n");
-	score();	
+	pontuacao();	
 	sleep(10);	
+	
 	printf("Finalizando programa, desconfigurando os Pinos....\n");
 	unsetPins();
 }
