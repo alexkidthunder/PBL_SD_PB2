@@ -285,13 +285,26 @@ void testeTexto()
 	instruction4bit(1,0,0,1,0,1);
     instruction4bit(1,0,0,0,1,1); // Escrita de digito 45H - S
 	usleep(3000); // em microsegundos
+	instruction4bit(0,0,0,0,0,1);
+    instruction4bit(0,0,0,1,0,0); // 		Cursor para direita 14H
+	usleep(3000); // em microsegundos
 	instruction4bit(1,0,0,1,1,0);
     instruction4bit(1,0,0,1,0,0); // Escrita de digito 45H - t
 	usleep(3000); // em microsegundos
+	instruction4bit(0,0,0,0,0,1);
+    instruction4bit(0,0,0,1,0,0); // 		Cursor para direita 14H
+	usleep(3000); // em microsegundos
 	instruction4bit(1,0,0,1,1,0);
     instruction4bit(1,0,0,0,0,1); // Escrita de digito 45H - a
+	usleep(3000); // em microsegundos
+	instruction4bit(0,0,0,0,0,1);
+    instruction4bit(0,0,0,1,0,0); // 		Cursor para direita 14H
+	usleep(3000); // em microsegundos
 	instruction4bit(1,0,0,1,1,0);
     instruction4bit(1,0,0,0,1,0); // Escrita de digito 45H - r
+	usleep(3000); // em microsegundos
+	instruction4bit(0,0,0,0,0,1);
+    instruction4bit(0,0,0,1,0,0); // 		Cursor para direita 14H
 	usleep(3000); // em microsegundos
 	instruction4bit(1,0,0,1,1,0);
     instruction4bit(1,0,0,1,0,0); // Escrita de digito 45H - t
@@ -441,6 +454,17 @@ void matrizLCD()
     instruction4bit(0,0,0,0,1,0); // Home Cursor
 }
 
+//Deslocamento Obstáculo
+void deslocObs() //Ultima posicao da segunda tela e se desloca para a esquerda
+{
+	
+}
+
+//Colisão do boneco com o obstaculo
+int colisao()
+{
+	
+}
 
 // Onde tudo começa
 // FPS 410 milisegundos 
@@ -448,15 +472,15 @@ int main(int argc, char *argv[])
 {
 	int state = 0;
 	if(state == 0)
-	{
+	{// Espera para apertar o botao e comecar o jogo
 		printf("Tela de Inicio\n");
 	}
 	else if(state == 1)
-	{
+	{// Durante a aplicacao
 		printf("jogatina\n");
 	}
 	else if(state == 2)
-	{
+	{// Aconteceu a colisao do boneco com o obstaculo
 		printf("Game Over\n");
 	}
 	printf("Configurando a pinagem....\n");
