@@ -298,6 +298,20 @@ void testeTexto()
 	usleep(3000); // em microsegundos
 }
 
+//Teste do boneco
+void testeBoneco()
+{
+	instruction4bit(0,0,0,0,0,0); // Home p/ Cursor
+    instruction4bit(0,0,0,0,1,0);
+	usleep(3000); // em microsegundos
+	instruction4bit(0,0,0,0,0,0); 
+    instruction4bit(0,0,0,0,0,1);// Clear Display
+	usleep(3000); // em microsegundos
+	/*Acesso aos Caracteres Especiais*/
+	instruction4bit(0,0,0,0,0,0); 
+    instruction4bit(0,0,0,0,0,0);// Display primeiro Caracter Customizado 00H
+	
+}
 
 // Teste de posicionamento do score
 void score()
@@ -319,6 +333,12 @@ void score()
 //Configuração HEX para BIN
 void boneco()
 {
+	/*Acessar a CGROM*/
+	instruction4bit(0,0,0,1,0,0);
+    instruction4bit(0,0,0,0,0,0); // Regiao da Memoria pra Caracteres Esp. 40H
+	
+	/*Caracter especial Boneco*/
+	
 	instruction4bit(0,0,0,0,0,0);
     instruction4bit(0,0,1,1,0,0); // CH
 	instruction4bit(0,0,0,0,0,0);
