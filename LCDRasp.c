@@ -16,7 +16,7 @@
 #define LOW  0
 #define HIGH 1
 
-//Global
+// Global
 struct gpio
 {	int rs;
 	int rw;
@@ -26,7 +26,7 @@ struct gpio
 
 struct gpio pins;
 
-//Pinagem 
+// Pinagem 
 void pinagem()
 {
 	pins.rs = 22;       // Register Select
@@ -38,7 +38,7 @@ void pinagem()
 	pins.data[3] = 18; 	// Data 7 em 8 bit    MSB
 }
 
-//Exportando o pino
+// Exportando o pino
 static int
 GPIOExport(int pin)
 {
@@ -59,7 +59,7 @@ GPIOExport(int pin)
 	return(0);
 }
 
-//Unexport do pino
+// Unexport do pino
 static int
 GPIOUnexport(int pin)
 {
@@ -79,7 +79,7 @@ GPIOUnexport(int pin)
 	return(0);
 }
 
-//Configurando o pino como INPUT ou OUTPUT
+// Configurando o pino como INPUT ou OUTPUT
 static int
 GPIODirection(int pin, int dir)
 {
@@ -104,7 +104,7 @@ GPIODirection(int pin, int dir)
     return 0;
 }
 
-//Efetuando a leitura no pino
+// Efetuando a leitura no pino
 static int
 GPIORead(int pin)
 {
@@ -131,7 +131,7 @@ GPIORead(int pin)
 	return(atoi(value_str));
 }
 
-//Escrita no pino
+// Escrita no pino
 static int
 GPIOWrite(int pin, int value)
 {
@@ -209,7 +209,7 @@ void unsetPins()
 	}
 }
 
-//Inicializacao do LCD de 4bits 1 
+// Inicializacao do LCD de 4bits 1 
 void initialize4bit()
 {
 	usleep(100000); // in miliseconds
@@ -243,7 +243,7 @@ void initialize4bit()
 }
 
 
-//Funcao teste do Escrita
+// Funcao teste do Escrita
 void testeTexto()
 {
 	instruction4bit(0,0,0,0,0,0); // Home p/ Cursor
@@ -299,7 +299,7 @@ void testeTexto()
 }
 
 
-//Teste de posicionamento do score
+// Teste de posicionamento do score
 void score()
 {
 	instruction4bit(0,0,0,0,0,1);
@@ -312,12 +312,33 @@ void score()
     instruction4bit(0,0,0,1,0,0); // Mensagem para direita 14H
 	usleep(3000); // em microsegundos
 	instruction4bit(0,0,0,0,1,1);
-    instruction4bit(0,0,0,0,0,0); // Score 0
+    instruction4bit(0,0,0,0,0,0); // Score numero 0
 
 }
 
+//Configuração HEX para BIN
+void boneco()
+{
+	instruction4bit(0,0,0,0,0,0);
+    instruction4bit(0,0,1,1,0,0); // CH
+	instruction4bit(0,0,0,0,0,0);
+    instruction4bit(0,0,1,1,0,0); // CH
+	instruction4bit(0,0,0,0,0,0);
+    instruction4bit(0,0,0,0,0,0); // 0H
+	instruction4bit(0,0,0,0,0,0);
+    instruction4bit(0,0,1,1,1,0); // EH
+	instruction4bit(0,0,0,0,0,1);
+    instruction4bit(0,0,1,1,0,0); // 1CH
+	instruction4bit(0,0,0,0,0,0);
+    instruction4bit(0,0,1,1,0,0); // CH
+	instruction4bit(0,0,0,0,0,1);
+    instruction4bit(0,0,0,0,1,0); // 12H
+	instruction4bit(0,0,0,0,0,1);
+    instruction4bit(0,0,0,0,1,1); // 13H	
+}
 
-//Onde tudo começa
+
+// Onde tudo começa
 int main(int argc, char *argv[])
 {
 	printf("Configurando a pinagem....\n");
