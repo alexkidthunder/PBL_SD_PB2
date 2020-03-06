@@ -311,7 +311,7 @@ void testeBoneco()
 	/*Acesso aos Caracteres Especiais*/
 	
 	instruction4bit(0,0,0,0,0,0); 
-    instruction4bit(0,0,0,0,0,0);// Display primeiro Caracter Customizado 00H
+    instruction4bit(0,0,0,0,0,0);// Display Primeiro Caracter Customizado 00H
 	
 }
 
@@ -403,8 +403,9 @@ void obstaculo()
 
 // Matriz que percorre as 32 posicoes do LCD att seus componentes
 void matrizLCD()
-{
-	
+{//Percorre de 0 a 15, quando pula mais uma posicao ele vai pra linha de baixo
+	instruction4bit(0,0,0,0,0,0);
+    instruction4bit(0,0,0,0,1,0); // Home Cursor
 }
 
 // Onde tudo começa
