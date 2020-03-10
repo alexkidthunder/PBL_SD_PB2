@@ -452,7 +452,7 @@ void obstaculo()
 
 
 // Matriz que percorre as 32 posicoes do LCD att seus componentes 
-int matrizLCD(int linha, int coluna, int bin[12])//Inicializacao e populacao
+int matrizlcdAtt(int linha, int coluna, int bin[12])//Inicializacao e populacao
 {//Percorre de 0 a 15, quando pula mais uma posicao ele vai pra linha de baixo e continua
 	int i = 0;
 	int j = 0;
