@@ -26,6 +26,10 @@ struct gpio
 
 struct gpio pins;
 
+/*Cada posicao da matriz contem um array do binario*/
+int matriz[2][16],i, j;// 2 Linhas, 16 Colunas
+int bin[12]; //Array contendo binario
+
 // Pinagem 
 void pinagem()
 {
@@ -456,6 +460,16 @@ void matrizLCD()
 
 //Deslocamento Obstáculo
 void deslocObs() //Ultima posicao da segunda tela e se desloca para a esquerda
+{
+	
+}
+
+void desloc16() //Deslocamento cursor ate a celula 16
+{
+	
+}
+
+void desloc32() //Deslocamento cursor ate a celula 32
 {
 	
 }
