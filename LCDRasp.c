@@ -26,8 +26,8 @@ struct gpio
 
 struct gpio pins;
 
-/*Cada posicao da matriz contem um array do binario*/
-int matriz[2][16],i, j;// 2 Linhas, 16 Colunas
+/*Cada posicao da matriz contem um array para atualizar a tela*/
+int matriz[2][16];// 2 Linhas, 16 Colunas
 int bin[12]; //Array contendo binario
 
 // Pinagem 
@@ -451,33 +451,24 @@ void obstaculo()
 }
 
 
-// Matriz que percorre as 32 posicoes do LCD att seus componentes #Opc01
-void matrizLCD()
-{//Percorre de 0 a 15, quando pula mais uma posicao ele vai pra linha de baixo
+// Matriz que percorre as 32 posicoes do LCD att seus componentes 
+int matrizLCD(int linha, int coluna, int bin[12])//Inicializacao e populacao
+{//Percorre de 0 a 15, quando pula mais uma posicao ele vai pra linha de baixo e continua
+	int i = 0;
+	int j = 0;
 	instruction4bit(0,0,0,0,0,0);
     instruction4bit(0,0,0,0,1,0); // Home Cursor
-}
-
-//Deslocamento Obstáculo
-void deslocObs() //Ultima posicao da segunda tela e se desloca para a esquerda
-{
 	
-}
-
-void desloc16() //Deslocamento cursor ate a celula 16
-{
-	
-}
-
-void desloc32() //Deslocamento cursor ate a celula 32
-{
-	
-}
-
-//Colisão do boneco com o obstaculo
-int colisao()
-{
-	
+	for ( i=0; i<2; i++ )
+		for ( j=0; j<16; j++ )
+		{
+			if(linha ==i && coluna == j)
+			{
+				matriz[ linha ][ coluna ] = bin[linha + coluna];				
+			}
+			instruction4bit(0,0,0,0,0,1);
+			instruction4bit(0,0,0,1,0,0); // 		Cursor para direita 14H
+		}
 }
 
 // Onde tudo começa
@@ -491,7 +482,7 @@ int main(int argc, char *argv[])
 		printf("Tela de Inicio\n"); // Comecar Piscando
 	}
 	else if(state == 1)
-	{// Durante a aplicacao
+	{// Ativo durante a aplicacao
 		printf("jogatina\n"); //Dchecar movimentacao do boneco e deslocamento do obstaculo
 	}
 	else if(state == 2)
