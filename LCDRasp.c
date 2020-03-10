@@ -470,6 +470,7 @@ int colisao()
 // FPS 410 milisegundos 
 int main(int argc, char *argv[])
 {
+	//Utilizar matriz ou fila pra mapear as 16 telas do LCD para poder manipular melhor
 	int state = 0;
 	if(state == 0)
 	{// Espera para apertar o botao e comecar o jogo
@@ -483,6 +484,8 @@ int main(int argc, char *argv[])
 	{// Aconteceu a colisao do boneco com o obstaculo e pausa
 		printf("Game Over\n");
 	}
+	
+	/*Testando funcoes separadas*/
 	printf("Configurando a pinagem....\n");
 	setupPins();	
 	sleep(10);
