@@ -26,10 +26,6 @@ struct gpio
 
 struct gpio pins;
 
-/*Cada posicao da matriz contem um array para atualizar a tela*/
-int matriz[2][16];// 2 Linhas, 16 Colunas
-int bin[12]; //Array contendo binario
-
 // Pinagem 
 void pinagem()
 {
@@ -246,93 +242,81 @@ void initialize4bit()
 	usleep(100); // in microseconds
 }
 
+//Deslocamento cursor a variar do sentido
+void desloc_cursor(int sentido)
+{
+	instruction4bit(0,0,0,0,0,1);
+    instruction4bit(0,0,0,sentido,0,0); // 		1 para direita, 0 para esquerda
+}
 
 // Funcao teste do Escrita
-void testeTexto()
+void texto_press_start()
 {
+	instruction4bit(0,0,0,0,0,0); // Limpar Display 
+    instruction4bit(0,0,0,0,1,0);
+	
 	instruction4bit(0,0,0,0,0,0); // Home p/ Cursor
     instruction4bit(0,0,0,0,1,0);
+	
 	usleep(3000); // em microsegundos
-	instruction4bit(0,0,0,0,0,1);
-    instruction4bit(0,0,0,1,0,0); // 		Cursor para direita 14H
-	usleep(3000); // em microsegundos
-	instruction4bit(0,0,0,0,0,0);
-    instruction4bit(0,0,1,1,1,1); // Liga o Display, Liga o Cursor piscando
-	usleep(3000); // em microsegundos
+	
 	instruction4bit(1,0,0,1,0,1);
     instruction4bit(1,0,0,0,0,0); // Escrita de digito 48H - P
+	
 	usleep(3000); // em microsegundos
-	instruction4bit(0,0,0,0,0,1);
-    instruction4bit(0,0,0,1,0,0); // 		Cursor para direita 14H
-	usleep(3000); // em microsegundos
+	
 	instruction4bit(1,0,0,1,1,0);
     instruction4bit(1,0,0,0,1,0); // Escrita de digito 45H - r
+	
 	usleep(3000); // em microsegundos
-	instruction4bit(0,0,0,0,0,1);
-    instruction4bit(0,0,0,1,0,0); // 		Cursor para direita 14H
-	usleep(3000); // em microsegundos
+	
 	instruction4bit(1,0,0,1,1,0);
     instruction4bit(1,0,0,1,0,1); // Escrita de digito 45H - e
+	
 	usleep(3000); // em microsegundos
-	instruction4bit(0,0,0,0,0,1);
-    instruction4bit(0,0,0,1,0,0); // 		Cursor para direita 14H
-	usleep(3000); // em microsegundos
+	
 	instruction4bit(1,0,0,1,1,1);
     instruction4bit(1,0,0,0,1,1); // Escrita de digito 45H - s
+	
 	usleep(3000); // em microsegundos
+	
 	instruction4bit(1,0,0,1,1,1);
     instruction4bit(1,0,0,0,1,1); // Escrita de digito 45H - s
+	
 	usleep(3000); // em microsegundos
+	
 	instruction4bit(0,0,0,0,0,1);
     instruction4bit(0,0,0,1,0,0); // 		Cursor para direita 14H
+	
 	usleep(3000); // em microsegundos
+	
 	instruction4bit(1,0,0,1,0,1);
     instruction4bit(1,0,0,0,1,1); // Escrita de digito 45H - S
+	
 	usleep(3000); // em microsegundos
-	instruction4bit(0,0,0,0,0,1);
-    instruction4bit(0,0,0,1,0,0); // 		Cursor para direita 14H
-	usleep(3000); // em microsegundos
+	
 	instruction4bit(1,0,0,1,1,0);
     instruction4bit(1,0,0,1,0,0); // Escrita de digito 45H - t
+	
 	usleep(3000); // em microsegundos
-	instruction4bit(0,0,0,0,0,1);
-    instruction4bit(0,0,0,1,0,0); // 		Cursor para direita 14H
-	usleep(3000); // em microsegundos
+	
 	instruction4bit(1,0,0,1,1,0);
     instruction4bit(1,0,0,0,0,1); // Escrita de digito 45H - a
+	
 	usleep(3000); // em microsegundos
-	instruction4bit(0,0,0,0,0,1);
-    instruction4bit(0,0,0,1,0,0); // 		Cursor para direita 14H
-	usleep(3000); // em microsegundos
+	
 	instruction4bit(1,0,0,1,1,0);
     instruction4bit(1,0,0,0,1,0); // Escrita de digito 45H - r
+	
 	usleep(3000); // em microsegundos
-	instruction4bit(0,0,0,0,0,1);
-    instruction4bit(0,0,0,1,0,0); // 		Cursor para direita 14H
-	usleep(3000); // em microsegundos
+	
 	instruction4bit(1,0,0,1,1,0);
     instruction4bit(1,0,0,1,0,0); // Escrita de digito 45H - t
+	
 	usleep(3000); // em microsegundos
 }
 
-//Teste do boneco
-void testeBoneco()
-{
-	instruction4bit(0,0,0,0,0,0); // Home p/ Cursor
-    instruction4bit(0,0,0,0,1,0);
-	usleep(3000); // em microsegundos
-	instruction4bit(0,0,0,0,0,0); 
-    instruction4bit(0,0,0,0,0,1);// Clear Display
-	usleep(3000); // em microsegundos
-	
-	/*Acesso aos Caracteres Especiais*/
-	
-	instruction4bit(0,0,0,0,0,0); 
-    instruction4bit(0,0,0,0,0,0);// Display Primeiro Caracter Customizado 00H
-	
-}
-
-//Numeracao
+//Numeracao 
 static int 
 numeracao(int numero)
 {
@@ -399,77 +383,61 @@ numeracao(int numero)
 //Configuração do Boneco
 void boneco()
 {
-	/*Acessar a CGROM*/
+	/*Acessar a CGRAM*/
 	instruction4bit(0,0,0,1,0,0);
     instruction4bit(0,0,0,0,0,0); // Regiao da Memoria pra Caracteres Esp. 40H
 	
 	/*Caracter especial Boneco*/
 	
+	/* Andar */
 	instruction4bit(0,0,0,0,0,0);
     instruction4bit(0,0,1,1,0,0); // CH
+	
 	instruction4bit(0,0,0,0,0,0);
     instruction4bit(0,0,1,1,0,0); // CH
+	
 	instruction4bit(0,0,0,0,0,0);
     instruction4bit(0,0,0,0,0,0); // 0H
+	
 	instruction4bit(0,0,0,0,0,0);
     instruction4bit(0,0,1,1,1,0); // EH
+	
 	instruction4bit(0,0,0,0,0,1);
     instruction4bit(0,0,1,1,0,0); // 1CH
+	
 	instruction4bit(0,0,0,0,0,0);
     instruction4bit(0,0,1,1,0,0); // CH
+	
 	instruction4bit(0,0,0,0,0,1);
     instruction4bit(0,0,0,0,1,0); // 12H
+	
 	instruction4bit(0,0,0,0,0,1);
     instruction4bit(0,0,0,0,1,1); // 13H	
+	
+	/* Pular */
 }
 
-//Configuração do obstaculo
-void obstaculo()
+//Mostrar no LCD o boneco salvo
+void testeBoneco()
 {
-	/*Acessar a CGROM*/
-	instruction4bit(0,0,0,1,0,0);
-    instruction4bit(0,0,0,0,0,0); // Regiao da Memoria pra Caracteres Esp. 40H
-	
-	/*Caracter especial do obstaculo*/
-	
-	instruction4bit(0,0,0,0,0,1);
-    instruction4bit(0,0,1,1,1,1); // 1FH
-	instruction4bit(0,0,0,0,0,1);
-    instruction4bit(0,0,1,1,1,1); // 1FH
-	instruction4bit(0,0,0,0,0,1);
-    instruction4bit(0,0,1,1,1,1); // 1FH
-	instruction4bit(0,0,0,0,0,1);
-    instruction4bit(0,0,1,1,1,1); // 1FH
-	instruction4bit(0,0,0,0,0,1);
-    instruction4bit(0,0,1,1,1,1); // 1FH
-	instruction4bit(0,0,0,0,0,1);
-    instruction4bit(0,0,1,1,1,1); // 1FH
-	instruction4bit(0,0,0,0,0,1);
-    instruction4bit(0,0,1,1,1,1); // 1FH
-	instruction4bit(0,0,0,0,0,1);
-    instruction4bit(0,0,1,1,1,1); // 1FH
-}
 
-
-// Matriz que percorre as 32 posicoes do LCD att seus componentes 
-int matrizlcdAtt(int linha, int coluna, int bin[12])//Inicializacao e populacao
-{//Percorre de 0 a 15, quando pula mais uma posicao ele vai pra linha de baixo e continua
-	int i = 0;
-	int j = 0;
-	instruction4bit(0,0,0,0,0,0);
-    instruction4bit(0,0,0,0,1,0); // Home Cursor
+/*
+//Teste do boneco
+void testeBoneco()
+{
+	instruction4bit(0,0,0,0,0,0); // Home p/ Cursor
+    instruction4bit(0,0,0,0,1,0);
+	usleep(3000); // em microsegundos
+	instruction4bit(0,0,0,0,0,0); 
+    instruction4bit(0,0,0,0,0,1);// Clear Display
+	usleep(3000); // em microsegundos
 	
-	for ( i=0; i<2; i++ )
-		for ( j=0; j<16; j++ )
-		{
-			if(linha ==i && coluna == j)
-			{
-				matriz[ linha ][ coluna ] = bin[linha + coluna];				
-			}
-			instruction4bit(0,0,0,0,0,1);
-			instruction4bit(0,0,0,1,0,0); // 		Cursor para direita 14H
-		}
-}
+	//Acesso aos Caracteres Especiais
+	
+	instruction4bit(0,0,0,0,0,0); 
+    instruction4bit(0,0,0,0,0,0);// Display Primeiro Caracter Customizado 00H
+	
+}*/
 
 // Onde tudo começa
 // FPS 410 milisegundos 
@@ -497,7 +465,7 @@ int main(int argc, char *argv[])
 	
 	printf("Inicializando o LCD....\n");	
 	initialize4bitLinha();
-	testeTexto();
+	texto_press_start();
 	
 	printf("Teste Score....\n");
 	pontuacao();	
