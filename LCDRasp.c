@@ -209,7 +209,7 @@ void unsetPins()
 	}
 }
 
-// Inicializacao do LCD de 4bits 1 
+// Inicializacao do LCD de 4bits 
 void initialize4bit()
 {
 	usleep(100000); // in miliseconds
@@ -249,7 +249,7 @@ void desloc_cursor(int sentido)
     instruction4bit(0,0,0,sentido,0,0); // 		1 para direita, 0 para esquerda
 }
 
-// Funcao teste do Escrita
+// Funcao Escrita do Inicio
 void texto_press_start()
 {
 	instruction4bit(0,0,0,0,0,0); // Limpar Display 
@@ -261,27 +261,27 @@ void texto_press_start()
 	usleep(3000); // em microsegundos
 	
 	instruction4bit(1,0,0,1,0,1);
-    instruction4bit(1,0,0,0,0,0); // Escrita de digito 48H - P
+    instruction4bit(1,0,0,0,0,0); // Escrita de digito  P
 	
 	usleep(3000); // em microsegundos
 	
 	instruction4bit(1,0,0,1,1,0);
-    instruction4bit(1,0,0,0,1,0); // Escrita de digito 45H - r
+    instruction4bit(1,0,0,0,1,0); // Escrita de digito  r
 	
 	usleep(3000); // em microsegundos
 	
 	instruction4bit(1,0,0,1,1,0);
-    instruction4bit(1,0,0,1,0,1); // Escrita de digito 45H - e
+    instruction4bit(1,0,0,1,0,1); // Escrita de digito  e
 	
 	usleep(3000); // em microsegundos
 	
 	instruction4bit(1,0,0,1,1,1);
-    instruction4bit(1,0,0,0,1,1); // Escrita de digito 45H - s
+    instruction4bit(1,0,0,0,1,1); // Escrita de digito  s
 	
 	usleep(3000); // em microsegundos
 	
 	instruction4bit(1,0,0,1,1,1);
-    instruction4bit(1,0,0,0,1,1); // Escrita de digito 45H - s
+    instruction4bit(1,0,0,0,1,1); // Escrita de digito  s
 	
 	usleep(3000); // em microsegundos
 	
@@ -291,29 +291,86 @@ void texto_press_start()
 	usleep(3000); // em microsegundos
 	
 	instruction4bit(1,0,0,1,0,1);
-    instruction4bit(1,0,0,0,1,1); // Escrita de digito 45H - S
+    instruction4bit(1,0,0,0,1,1); // Escrita de digito  S
 	
 	usleep(3000); // em microsegundos
 	
 	instruction4bit(1,0,0,1,1,0);
-    instruction4bit(1,0,0,1,0,0); // Escrita de digito 45H - t
+    instruction4bit(1,0,0,1,0,0); // Escrita de digito  t
 	
 	usleep(3000); // em microsegundos
 	
 	instruction4bit(1,0,0,1,1,0);
-    instruction4bit(1,0,0,0,0,1); // Escrita de digito 45H - a
+    instruction4bit(1,0,0,0,0,1); // Escrita de digito  a
 	
 	usleep(3000); // em microsegundos
 	
 	instruction4bit(1,0,0,1,1,0);
-    instruction4bit(1,0,0,0,1,0); // Escrita de digito 45H - r
+    instruction4bit(1,0,0,0,1,0); // Escrita de digito  r
 	
 	usleep(3000); // em microsegundos
 	
 	instruction4bit(1,0,0,1,1,0);
-    instruction4bit(1,0,0,1,0,0); // Escrita de digito 45H - t
+    instruction4bit(1,0,0,1,0,0); // Escrita de digito  t
 	
 	usleep(3000); // em microsegundos
+}
+
+// Funcao Escrita da Perda
+void texto_game_over()
+{
+	instruction4bit(0,0,0,0,0,0); // Limpar Display 
+    instruction4bit(0,0,0,0,1,0);
+	
+	instruction4bit(0,0,0,0,0,0); // Home p/ Cursor
+    instruction4bit(0,0,0,0,1,0);
+	
+	usleep(3000); // em microsegundos
+	
+	instruction4bit(1,0,0,1,0,0);
+    instruction4bit(1,0,0,1,1,1); // Escrita de digito  G
+	
+	usleep(3000); // em microsegundos
+	
+	instruction4bit(1,0,0,1,1,0);
+    instruction4bit(1,0,0,0,0,1); // Escrita de digito  a
+	
+	usleep(3000); // em microsegundos
+	
+	instruction4bit(1,0,0,1,1,0);
+    instruction4bit(1,0,1,1,0,1); // Escrita de digito  m
+	
+	usleep(3000); // em microsegundos
+	
+	instruction4bit(1,0,0,1,1,0);
+    instruction4bit(1,0,0,1,0,1); // Escrita de digito  e
+	
+	usleep(3000); // em microsegundos
+	
+	instruction4bit(0,0,0,0,0,1);
+    instruction4bit(0,0,0,1,0,0); // 		Cursor para direita 14H
+	
+	usleep(3000); // em microsegundos
+	
+	instruction4bit(0,0,0,1,0,0);
+    instruction4bit(0,0,1,1,1,1); // Escrita de digito  O
+	
+	usleep(3000); // em microsegundos
+	
+	instruction4bit(0,0,0,1,1,1);
+    instruction4bit(0,0,0,1,1,0); // Escrita de digito  v
+	
+	usleep(3000); // em microsegundos
+	
+	instruction4bit(1,0,0,1,1,0);
+    instruction4bit(1,0,0,1,0,1); // Escrita de digito  e
+	
+	usleep(3000); // em microsegundos
+	
+	instruction4bit(1,0,0,1,1,0);
+    instruction4bit(1,0,0,0,1,0); // Escrita de digito  r
+	
+	usleep(3000); // em microsegundos	
 }
 
 //Numeracao 
