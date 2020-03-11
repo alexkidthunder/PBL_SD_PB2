@@ -242,13 +242,6 @@ void initialize4bit()
 	usleep(100); // in microseconds
 }
 
-//Deslocamento cursor a variar do sentido
-void desloc_cursor(int sentido)
-{
-	instruction4bit(0,0,0,0,0,1);
-    instruction4bit(0,0,0,sentido,0,0); // 		1 para direita, 0 para esquerda
-}
-
 // Funcao Escrita do Inicio
 void texto_press_start()
 {
@@ -352,13 +345,13 @@ void texto_game_over()
 	
 	usleep(3000); // em microsegundos
 	
-	instruction4bit(0,0,0,1,0,0);
-    instruction4bit(0,0,1,1,1,1); // Escrita de digito  O
+	instruction4bit(1,0,0,1,0,0);
+    instruction4bit(1,0,1,1,1,1); // Escrita de digito  O
 	
 	usleep(3000); // em microsegundos
 	
-	instruction4bit(0,0,0,1,1,1);
-    instruction4bit(0,0,0,1,1,0); // Escrita de digito  v
+	instruction4bit(1,0,0,1,1,1);
+    instruction4bit(1,0,0,1,1,0); // Escrita de digito  v
 	
 	usleep(3000); // em microsegundos
 	
@@ -380,60 +373,73 @@ numeracao(int numero)
 	switch (numero)
 	{
 		case 0:
-	instruction4bit(0,0,0,0,1,1); 
-    instruction4bit(0,0,0,0,0,0); // Numero 0
+	instruction4bit(1,0,0,0,1,1); 
+    instruction4bit(1,0,0,0,0,0); // Numero 0
      
 	break;
 		case 1:
-	instruction4bit(0,0,0,0,1,1); 
-    instruction4bit(0,0,0,0,0,1); // Numero 1
+	instruction4bit(1,0,0,0,1,1); 
+    instruction4bit(1,0,0,0,0,1); // Numero 1
      
 	break;	
 		case 2:
-	instruction4bit(0,0,0,0,1,1); 
-    instruction4bit(0,0,0,0,1,0); // Numero 2
+	instruction4bit(1,0,0,0,1,1); 
+    instruction4bit(1,0,0,0,1,0); // Numero 2
      
 	break;
 		case 3:
-	instruction4bit(0,0,0,0,1,1); 
-    instruction4bit(0,0,0,0,1,1); // Numero 3
+	instruction4bit(1,0,0,0,1,1); 
+    instruction4bit(1,0,0,0,1,1); // Numero 3
      
 	break;
 		case 4:
-	instruction4bit(0,0,0,0,1,1); 
-    instruction4bit(0,0,0,1,0,0); // Numero 4
+	instruction4bit(1,0,0,0,1,1); 
+    instruction4bit(1,0,0,1,0,0); // Numero 4
      
 	break;
 		case 5:
-	instruction4bit(0,0,0,0,1,1); 
-    instruction4bit(0,0,0,1,0,1); // Numero 5
+	instruction4bit(1,0,0,0,1,1); 
+    instruction4bit(1,0,0,1,0,1); // Numero 5
      
 	break;
 		case 6:
-	instruction4bit(0,0,0,0,1,1); 
-    instruction4bit(0,0,0,1,1,0); // Numero 6
+	instruction4bit(1,0,0,0,1,1); 
+    instruction4bit(1,0,0,1,1,0); // Numero 6
      
 	break;
 		case 7:
-	instruction4bit(0,0,0,0,1,1); 
-    instruction4bit(0,0,0,1,1,1); // Numero 7
+	instruction4bit(1,0,0,0,1,1); 
+    instruction4bit(1,0,0,1,1,1); // Numero 7
      
 	break;
 		case 8:
-	instruction4bit(0,0,0,0,1,1); 
-    instruction4bit(0,0,1,0,0,0); // Numero 8
+	instruction4bit(1,0,0,0,1,1); 
+    instruction4bit(1,0,1,0,0,0); // Numero 8
      
 	break;
 		case 9:
-	instruction4bit(0,0,0,0,1,1); 
-    instruction4bit(0,0,1,0,0,1); // Numero 9
+	instruction4bit(1,0,0,0,1,1); 
+    instruction4bit(1,0,1,0,0,1); // Numero 9
      
 	break;
 
 	default
      printf("Algo de errado não esta certo com os numeros\n");
 	 return 0;
+	}	
+}
+
+//Desenhar a pontuacao no LCD
+desenhar_score(int score)
+{	
+	instruction4bit(0,0,0,0,0,0); // Home p/ Cursor
+    instruction4bit(0,0,0,0,1,0);
+	
+	for(i = 0; i < 16; i++)
+	{
+		desloc_cursor(1);
 	}
+	numeracao(score);
 	
 }
 
@@ -447,39 +453,56 @@ void boneco()
 	/*Caracter especial Boneco*/
 	
 	/* Andar */
-	instruction4bit(0,0,0,0,0,0);
-    instruction4bit(0,0,1,1,0,0); // CH
+	instruction4bit(1,0,0,0,0,0);
+    instruction4bit(1,0,1,1,0,0); // CH
 	
-	instruction4bit(0,0,0,0,0,0);
-    instruction4bit(0,0,1,1,0,0); // CH
+	instruction4bit(1,0,0,0,0,0);
+    instruction4bit(1,0,1,1,0,0); // CH
 	
-	instruction4bit(0,0,0,0,0,0);
-    instruction4bit(0,0,0,0,0,0); // 0H
+	instruction4bit(1,0,0,0,0,0);
+    instruction4bit(1,0,0,0,0,0); // 0H
 	
-	instruction4bit(0,0,0,0,0,0);
-    instruction4bit(0,0,1,1,1,0); // EH
+	instruction4bit(1,0,0,0,0,0);
+    instruction4bit(1,0,1,1,1,0); // EH
 	
-	instruction4bit(0,0,0,0,0,1);
-    instruction4bit(0,0,1,1,0,0); // 1CH
+	instruction4bit(1,0,0,0,0,1);
+    instruction4bit(1,0,1,1,0,0); // 1CH
 	
-	instruction4bit(0,0,0,0,0,0);
-    instruction4bit(0,0,1,1,0,0); // CH
+	instruction4bit(1,0,0,0,0,0);
+    instruction4bit(1,0,1,1,0,0); // CH
 	
-	instruction4bit(0,0,0,0,0,1);
-    instruction4bit(0,0,0,0,1,0); // 12H
+	instruction4bit(1,0,0,0,0,1);
+    instruction4bit(1,0,0,0,1,0); // 12H
 	
-	instruction4bit(0,0,0,0,0,1);
-    instruction4bit(0,0,0,0,1,1); // 13H	
+	instruction4bit(1,0,0,0,0,1);
+    instruction4bit(1,0,0,0,1,1); // 13H	
 	
 	/* Pular */
 }
 
-//Mostrar no LCD o boneco salvo
-void testeBoneco()
+//Deslocamento cursor a variar do sentido
+void desloc_cursor(int sentido)
 {
+	instruction4bit(0,0,0,0,0,1);
+    instruction4bit(0,0,0,sentido,0,0); // 		1 para direita, 0 para esquerda
+}
+
+//Mostrar no LCD o boneco salvo
+void desenhar_Boneco()
+{
+	instruction4bit(0,0,0,0,0,0); // Home p/ Cursor
+    instruction4bit(0,0,0,0,1,0);
+	
+	for(i = 0; i < 18; i++)
+	{
+		desloc_cursor(1);
+	}		
+	instruction4bit(1,0,0,0,0,0); 
+    instruction4bit(1,0,0,0,0,0);// Display Primeiro Caracter Customizado 00H
+}
 
 /*
-//Teste do boneco
+//Mostrar no LCD o boneco salvo
 void testeBoneco()
 {
 	instruction4bit(0,0,0,0,0,0); // Home p/ Cursor
@@ -491,18 +514,38 @@ void testeBoneco()
 	
 	//Acesso aos Caracteres Especiais
 	
-	instruction4bit(0,0,0,0,0,0); 
-    instruction4bit(0,0,0,0,0,0);// Display Primeiro Caracter Customizado 00H
+	instruction4bit(1,0,0,0,0,0); 
+    instruction4bit(1,0,0,0,0,0);// Display Primeiro Caracter Customizado 00H
 	
 }*/
+
+//Desenhar no LCD o obstaculo 
+void desenhar_bloco()
+{
+	instruction4bit(0,0,0,0,0,0); // Home p/ Cursor
+    instruction4bit(0,0,0,0,1,0);
+	
+	for(i = 0; i < 18; i++)
+	{
+		desloc_cursor(1);
+	}		
+    instruction4bit(1, 0, 1, 1, 1, 1)
+    instruction4bit(1, 0, 1, 1, 1, 1)
+
+	for(i = 32; i >15 ; i--)
+	{
+		desloc_cursor(0);
+	}
+}
 
 // Onde tudo começa
 // FPS 410 milisegundos 
 int main(int argc, char *argv[])
 {
-	//Utilizar matriz ou fila pra mapear as 16 telas do LCD para poder manipular melhor
 	int state = 0;
-	if(state == 0)
+	
+	
+	if(state == 0)		
 	{// Espera para apertar o botao e comecar o jogo
 		printf("Tela de Inicio\n"); // Comecar Piscando
 	}
