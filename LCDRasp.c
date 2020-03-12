@@ -258,7 +258,7 @@ void texto_press_start()
 	
 	usleep(3000); // em microsegundos
 	
-	instruction4bit(1,0,0,1,1,0);
+	instruction4bit(1,0,0,1,1,1);
     instruction4bit(1,0,0,0,1,0); // Escrita de digito  r
 	
 	usleep(3000); // em microsegundos
@@ -288,7 +288,7 @@ void texto_press_start()
 	
 	usleep(3000); // em microsegundos
 	
-	instruction4bit(1,0,0,1,1,0);
+	instruction4bit(1,0,0,1,1,1);
     instruction4bit(1,0,0,1,0,0); // Escrita de digito  t
 	
 	usleep(3000); // em microsegundos
@@ -298,12 +298,12 @@ void texto_press_start()
 	
 	usleep(3000); // em microsegundos
 	
-	instruction4bit(1,0,0,1,1,0);
+	instruction4bit(1,0,0,1,1,1);
     instruction4bit(1,0,0,0,1,0); // Escrita de digito  r
 	
 	usleep(3000); // em microsegundos
 	
-	instruction4bit(1,0,0,1,1,0);
+	instruction4bit(1,0,0,1,1,1);
     instruction4bit(1,0,0,1,0,0); // Escrita de digito  t
 	
 	usleep(3000); // em microsegundos
@@ -423,19 +423,19 @@ numeracao(int numero)
      
 	break;
 
-	default
+	default:
      printf("Algo de errado não esta certo com os numeros\n");
 	 return 0;
 	}	
 }
 
 //Desenhar a pontuacao no LCD
-desenhar_score(int score)
+void desenhar_score(int score)
 {	
 	instruction4bit(0,0,0,0,0,0); // Home p/ Cursor
     instruction4bit(0,0,0,0,1,0);
 	
-	for(i = 0; i < 16; i++)
+	for(int i = 0; i < 15; i++)
 	{
 		desloc_cursor(1);
 	}
@@ -453,6 +453,7 @@ void boneco()
 	/*Caracter especial Boneco*/
 	
 	/* Andar */
+		
 	instruction4bit(1,0,0,0,0,0);
     instruction4bit(1,0,1,1,0,0); // CH
 	
@@ -463,7 +464,7 @@ void boneco()
     instruction4bit(1,0,0,0,0,0); // 0H
 	
 	instruction4bit(1,0,0,0,0,0);
-    instruction4bit(1,0,1,1,1,0); // EH
+    instruction4bit(1,0,1,1,1,0); // EH	
 	
 	instruction4bit(1,0,0,0,0,1);
     instruction4bit(1,0,1,1,0,0); // 1CH
@@ -476,6 +477,7 @@ void boneco()
 	
 	instruction4bit(1,0,0,0,0,1);
     instruction4bit(1,0,0,0,1,1); // 13H	
+
 	
 	/* Pular */
 }
@@ -486,38 +488,27 @@ void desloc_cursor(int sentido)
 	instruction4bit(0,0,0,0,0,1);
     instruction4bit(0,0,0,sentido,0,0); // 		1 para direita, 0 para esquerda
 }
+//Deslocamento mensagem a variar do sentido
+void desloc_mem(int sentido)
+{
+	instruction4bit(0,0,0,0,0,1);
+    instruction4bit(0,0,1,sentido,0,0); // 		1 para direita, 0 para esquerda
+}
 
+//Error
 //Mostrar no LCD o boneco salvo
 void desenhar_Boneco()
 {
 	instruction4bit(0,0,0,0,0,0); // Home p/ Cursor
     instruction4bit(0,0,0,0,1,0);
 	
-	for(i = 0; i < 18; i++)
+	for(int i = 0; i < 42; i++)
 	{
 		desloc_cursor(1);
 	}		
 	instruction4bit(1,0,0,0,0,0); 
     instruction4bit(1,0,0,0,0,0);// Display Primeiro Caracter Customizado 00H
 }
-
-/*
-//Mostrar no LCD o boneco salvo
-void testeBoneco()
-{
-	instruction4bit(0,0,0,0,0,0); // Home p/ Cursor
-    instruction4bit(0,0,0,0,1,0);
-	usleep(3000); // em microsegundos
-	instruction4bit(0,0,0,0,0,0); 
-    instruction4bit(0,0,0,0,0,1);// Clear Display
-	usleep(3000); // em microsegundos
-	
-	//Acesso aos Caracteres Especiais
-	
-	instruction4bit(1,0,0,0,0,0); 
-    instruction4bit(1,0,0,0,0,0);// Display Primeiro Caracter Customizado 00H
-	
-}*/
 
 //Desenhar no LCD o obstaculo 
 void desenhar_bloco()
@@ -525,34 +516,36 @@ void desenhar_bloco()
 	instruction4bit(0,0,0,0,0,0); // Home p/ Cursor
     instruction4bit(0,0,0,0,1,0);
 	
-	for(i = 0; i < 18; i++)
+	for(int i = 0; i < 55; i++)
 	{
 		desloc_cursor(1);
 	}		
-    instruction4bit(1, 0, 1, 1, 1, 1)
-    instruction4bit(1, 0, 1, 1, 1, 1)
+    instruction4bit(1, 0, 1, 1, 1, 1);
+    instruction4bit(1, 0, 1, 1, 1, 1);
 
-	for(i = 32; i >15 ; i--)
+	for(int j = 55; j >49 ; j--)
 	{
-		desloc_cursor(0);
+		desloc_mem(0);
 	}
+
 }
 
 // Onde tudo começa
 // FPS 410 milisegundos 
 int main(int argc, char *argv[])
-{
+{/*
 	int state = 0;
-	
-	
+		
 	if(state == 0)		
 	{// Espera para apertar o botao e comecar o jogo
 		printf("Tela de Inicio\n"); // Comecar Piscando
 	}
+	
 	else if(state == 1)
 	{// Ativo durante a aplicacao
 		printf("jogatina\n"); //Dchecar movimentacao do boneco e deslocamento do obstaculo
 	}
+	
 	else if(state == 2)
 	{// Aconteceu a colisao do boneco com o obstaculo e pausa
 		printf("Game Over\n");
@@ -564,11 +557,18 @@ int main(int argc, char *argv[])
 	sleep(10);
 	
 	printf("Inicializando o LCD....\n");	
-	initialize4bitLinha();
+	initialize4bit();
 	texto_press_start();
 	
 	printf("Teste Score....\n");
-	pontuacao();	
+	desenhar_score(5);	//Biblioteca time
+	
+	printf("Teste boneco....\n");
+	desenhar_Boneco();// Nao funfa
+	
+	printf("Teste bloco....\n");
+	desenhar_bloco();// Deslocar mensagem leva a tela toda
+
 	sleep(10);	
 	
 	printf("Finalizando programa, desconfigurando os Pinos....\n");
