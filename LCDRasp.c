@@ -23,9 +23,10 @@ struct gpio
 	int rw;
 	int enable;
 	int data[3];
-	//int pausa;
-	//int pulo;
-	//int reset;
+	
+	int pausa;//
+	int pulo;//
+	int reset;//
 };
 
 struct gpio pins;
@@ -40,6 +41,11 @@ void pinagem()
 	pins.data[1] = 24;	// Data 5 em 8 bit
 	pins.data[2] = 23; 	// Data 6 em 8 bit
 	pins.data[3] = 18; 	// Data 7 em 8 bit    MSB
+	
+	pins.pausa = 5;//           pausa
+	pins.pulo = 19;//           pulo
+	pins.reset = 26;//          reset
+	
 }
 
 // Exportando o pino
@@ -109,6 +115,9 @@ GPIODirection(int pin, int dir)
 }
 
 // Efetuando a leitura no pino
+
+//Funcionamento qunado for IN, para os botoess
+
 static int
 GPIORead(int pin)
 {
@@ -188,6 +197,13 @@ void setupPins()
 	GPIODirection(pins.rw, OUT);
 	GPIOExport(pins.enable);
 	GPIODirection(pins.enable, OUT);
+	
+	GPIOExport(pins.pausa);
+	GPIODirection(pins.pausa, IN);
+	GPIOExport(pins.pulo);
+	GPIODirection(pins.pulo, IN);
+	GPIOExport(pins.reset);
+	GPIODirection(pins.reset, IN);
 
 	int i = 0;
 	for(i = 0; i < 4; i++)
@@ -443,8 +459,19 @@ void desenhar_score(int score)
 	{
 		desloc_cursor(1);
 	}
-	numeracao(score);
+	numeracao(score);	
+}
+//Desena
+void desenhar_score_Desena(int score)
+{	
+	instruction4bit(0,0,0,0,0,0); // Home p/ Cursor
+    instruction4bit(0,0,0,0,1,0);
 	
+	for(int i = 0; i < 14; i++)
+	{
+		desloc_cursor(1);
+	}
+	numeracao(score);	
 }
 
 //Configuração do Boneco
@@ -456,7 +483,7 @@ void boneco()
 	
 	/*Caracter especial Boneco*/
 	
-	/* Andar */
+	/* Andar 00 */
 		
 	instruction4bit(1,0,0,0,0,0);
     instruction4bit(1,0,1,1,0,0); // CH
@@ -481,6 +508,70 @@ void boneco()
 	
 	instruction4bit(1,0,0,0,0,1);
     instruction4bit(1,0,0,0,1,1); // 13H	
+	
+	/* Andar 01 */....
+	
+	/*Acessar a CGRAM*/
+	instruction4bit(0,0,0,1,0,0);
+    instruction4bit(0,0,1,0,0,0); // Regiao da Memoria pra Caracteres Esp. 48H
+	
+	
+	instruction4bit(1,0,0,0,0,0);
+    instruction4bit(1,0,1,1,0,0); // CH
+	
+	instruction4bit(1,0,0,0,0,0);
+    instruction4bit(1,0,1,1,0,0); // CH
+	
+	instruction4bit(1,0,0,0,0,0);
+    instruction4bit(1,0,0,0,0,0); // 0H
+	
+	instruction4bit(1,0,0,0,0,0);
+    instruction4bit(1,0,1,1,1,0); // EH	
+	
+	instruction4bit(1,0,0,0,0,1);
+    instruction4bit(1,0,1,1,0,0); // 1CH
+	
+	instruction4bit(1,0,0,0,0,0);
+    instruction4bit(1,0,1,1,0,0); // CH
+	
+	instruction4bit(1,0,0,0,0,1);
+    instruction4bit(1,0,0,0,1,0); // 12H
+	
+	instruction4bit(1,0,0,0,0,1);
+    instruction4bit(1,0,0,0,1,1); // 13H	
+	
+	
+	/* Pular */...
+	
+	/*Acessar a CGRAM*/
+	instruction4bit(0,0,0,1,0,1);
+    instruction4bit(0,0,0,1,1,0); // Regiao da Memoria pra Caracteres Esp. 56H
+	
+	
+	instruction4bit(1,0,0,0,0,0);
+    instruction4bit(1,0,1,1,0,0); // CH
+	
+	instruction4bit(1,0,0,0,0,0);
+    instruction4bit(1,0,1,1,0,0); // CH
+	
+	instruction4bit(1,0,0,0,0,0);
+    instruction4bit(1,0,0,0,0,0); // 0H
+	
+	instruction4bit(1,0,0,0,0,0);
+    instruction4bit(1,0,1,1,1,0); // EH	
+	
+	instruction4bit(1,0,0,0,0,1);
+    instruction4bit(1,0,1,1,0,0); // 1CH
+	
+	instruction4bit(1,0,0,0,0,0);
+    instruction4bit(1,0,1,1,0,0); // CH
+	
+	instruction4bit(1,0,0,0,0,1);
+    instruction4bit(1,0,0,0,1,0); // 12H
+	
+	instruction4bit(1,0,0,0,0,1);
+    instruction4bit(1,0,0,0,1,1); // 13H	
+	
 
 }
 
@@ -493,7 +584,7 @@ void desloc_cursor(int sentido)
     instruction4bit(0,0,0,sentido,0,0); // 		1 para direita, 0 para esquerda
 }
 
-//Deslocamento mensagem a variar do sentido
+//Deslocamento mensagem a variar do sentido, resulta no deslocamento da tela toda
 void desloc_mem(int sentido)
 {
 	instruction4bit(0,0,0,0,0,1);
@@ -509,7 +600,7 @@ void desenhar_Boneco()
 	instruction4bit(0,0,0,0,0,0); // Home p/ Cursor
     instruction4bit(0,0,0,0,1,0);
 	
-	for(int i = 0; i < 42; i++)
+	for(int i = 0; i < 41; i++)
 	{
 		desloc_cursor(1);
 	}		
@@ -532,62 +623,119 @@ void desenhar_bloco()
 
 	for(int j = 55; j >49 ; j--)
 	{
-		desloc_mem(0);
+		//desloc_mem(0);
 	}
 
 }
 
+
+
+
 //Funcao do botao
-void pressButton()
+int pressButton(int pino)
 {
 	
+	return GPIORead(pino);
+
+}
+
+
+
+
+
+//
+void tempoSegundos()
+{
+	clock_t inicio, espera;
+  
+    espera = (1000/1000) * CLK_TCK;// 1 segundo = 1000 em milisegundos
+    inicio = clock( );
+
+       while( (clock( ) - inicio) < espera ){};	
 }
 
 // Onde tudo começa
 // FPS 410 milisegundos 
 int main(int argc, char *argv[])
 {
-	int state = 0;
-	boneco();// Cria o boneco customizado	
+	int state = 0;	
 	int tempo = 0;
-	bool pausar = false;
-	bool telaInit = false;
+	int pause = 0;
+	int telaInit = 0;
+	int a = 0;
+
+	 
+	printf("Configurando a pinagem....\n");
+	setupPins();	
+	sleep(10);
+	printf("Inicializando o LCD....\n");	
+	initialize4bit();
 	
-	for(;;;)
+	printf("Teste boneco....\n");
+	boneco();// Cria o boneco customizado	
+	desenhar_Boneco();// Desenha o boneco
+	
+	printf("Teste bloco....\n");
+	desenhar_bloco();// Deslocar mensagem leva a tela toda	
+	
+	printf("Teste Score....\n");
+	for(int t = 0; t < 10; t++)
+	{
+		for(int k = 0; k < 10; k++)
+		{
+			tempoSegundos();
+			desenhar_score(k);
+			desenhar_score_Desena(t);	
+		}			
+	}
+		
+	
+	
+	/*
+	for(;;)
 	{			
 		if(state == 0)// Texto de inicio
 			{
 				tempo++;
-				if (tempo > 1) 
+				usleep(50000); // em microsegundos
+				if (tempo > 4) 
 				{
 					if (telaInit) 
 					{
 						texto_press_start( );
 					} else {
-						lcd.clear_display();
+						instruction4bit(0,0,0,0,0,0); // Limpar Display 
+						instruction4bit(0,0,0,0,0,1);
 					}
 					tempo = 0;
 					telaInit = !telaInit;
                 }
-				if (pressButton() == 0) {//Apertar o botao para começar
-					state = 1
+				usleep(50000); // em microsegundos
+				if (pressButton() == 0) //Apertar o botao para começar
+				{
+					state = 1;
 				}
 			}
 		
 		else if(state == 1)// Tempo de execucao
 			{				
-				if (pausar == false)
+				if (pause == 0)
 				{
 					if(pressButton()== 1){
 						//Contador e desenhar bloco
+						if()//pulo e altura = mudar boneco
+						{
+							
+						}
 					}
 					
 				}
-				if(pausar && pressButton() == 1) {//Apertar o botao para começar
-					pausar = !pausar;
+				if(pause && pressButton() == 1) {//Apertar o botao para começar
+					pause = !pause;
 				}
 				
-				/* o Que vai aparecer no LCD */
+				/* o Que vai aparecer no LCD 
+				
 				instruction4bit(0,0,0,0,0,0); // Limpar Display 
 				instruction4bit(0,0,0,0,0,1);
 				
@@ -596,50 +744,29 @@ int main(int argc, char *argv[])
 				desenhar_bloco();// Deslocar mensagem leva a tela toda
 				usleep(300); // em microsegundos				
 			}
-		
+		*/
+		/*
 		else if(state == 2)// Pausar
 			{
 				if (pressButton() == 0) 
 					{                      
 						state = 1;
-					}
-				
+					}				
 			}
+		
 		else
 			{
 				instruction4bit(0,0,0,0,0,0); // Limpar Display 
 				instruction4bit(0,0,0,0,0,1);
 				
 				texto_game_over();
-				/*
+				
 				return(0);
 				exit();
-				*/
+				
 			}		
-	}
-	
-	/*Testando funcoes separadas*/	
-		
-		printf("Configurando a pinagem....\n");
-		setupPins();	
-		sleep(10);
-		
-		printf("Inicializando o LCD....\n");	
-		initialize4bit();
-		texto_press_start();
-		
-		printf("Teste Score....\n");
-		desenhar_score(5);	//Biblioteca time
-		
-		printf("Teste boneco....\n");
-		
-		desenhar_Boneco();// Desenha o boneco
-		
-		printf("Teste bloco....\n");
-		desenhar_bloco();// Deslocar mensagem leva a tela toda
-
-		sleep(10);	
+	}*/
 		
 		printf("Finalizando programa, desconfigurando os Pinos....\n");
-		unsetPins();
+		//unsetPins(); //Funcionando?
 }
