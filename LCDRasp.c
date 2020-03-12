@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <time.h>
 
 #define IN  0
 #define OUT 1
@@ -22,6 +23,9 @@ struct gpio
 	int rw;
 	int enable;
 	int data[3];
+	//int pausa;
+	//int pulo;
+	//int reset;
 };
 
 struct gpio pins;
@@ -593,7 +597,7 @@ int main(int argc, char *argv[])
 				usleep(300); // em microsegundos				
 			}
 		
-		else if(state == 2)
+		else if(state == 2)// Pausar
 			{
 				if (pressButton() == 0) 
 					{                      
@@ -601,10 +605,20 @@ int main(int argc, char *argv[])
 					}
 				
 			}
-		
-		
-		
-		/*Testando funcoes separadas*/	
+		else
+			{
+				instruction4bit(0,0,0,0,0,0); // Limpar Display 
+				instruction4bit(0,0,0,0,0,1);
+				
+				texto_game_over();
+				/*
+				return(0);
+				exit();
+				*/
+			}		
+	}
+	
+	/*Testando funcoes separadas*/	
 		
 		printf("Configurando a pinagem....\n");
 		setupPins();	
@@ -628,5 +642,4 @@ int main(int argc, char *argv[])
 		
 		printf("Finalizando programa, desconfigurando os Pinos....\n");
 		unsetPins();
-	}
 }
