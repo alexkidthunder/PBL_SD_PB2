@@ -525,20 +525,20 @@ void boneco()
 	instruction4bit(1,0,0,0,0,0);
     instruction4bit(1,0,0,0,0,0); // 0H
 	
-	instruction4bit(1,0,0,0,0,0);
-    instruction4bit(1,0,1,1,1,0); // EH	
-	
 	instruction4bit(1,0,0,0,0,1);
-    instruction4bit(1,0,1,1,0,0); // 1CH
+    instruction4bit(1,0,1,1,0,0); // EH	
+	
+	instruction4bit(1,0,0,0,0,0);
+    instruction4bit(1,0,1,1,1,0); // 1CH
 	
 	instruction4bit(1,0,0,0,0,0);
     instruction4bit(1,0,1,1,0,0); // CH
 	
 	instruction4bit(1,0,0,0,0,1);
-    instruction4bit(1,0,0,0,1,0); // 12H
+    instruction4bit(1,0,1,1,0,0); // 12H
 	
-	instruction4bit(1,0,0,0,0,1);
-    instruction4bit(1,0,0,0,1,1); // 13H	
+	instruction4bit(1,0,0,0,0,0);
+    instruction4bit(1,0,1,1,1,0); // 13H	
 	
 	
 	/* Pular */...
@@ -549,28 +549,28 @@ void boneco()
 	
 	
 	instruction4bit(1,0,0,0,0,0);
-    instruction4bit(1,0,1,1,0,0); // CH
+    instruction4bit(1,0,1,1,0,0); // 
 	
 	instruction4bit(1,0,0,0,0,0);
-    instruction4bit(1,0,1,1,0,0); // CH
+    instruction4bit(1,0,1,1,0,0); // 
 	
 	instruction4bit(1,0,0,0,0,0);
-    instruction4bit(1,0,0,0,0,0); // 0H
-	
-	instruction4bit(1,0,0,0,0,0);
-    instruction4bit(1,0,1,1,1,0); // EH	
+    instruction4bit(1,0,0,0,0,0); // 
 	
 	instruction4bit(1,0,0,0,0,1);
-    instruction4bit(1,0,1,1,0,0); // 1CH
+    instruction4bit(1,0,1,1,0,0); // 	
 	
 	instruction4bit(1,0,0,0,0,0);
-    instruction4bit(1,0,1,1,0,0); // CH
+    instruction4bit(1,0,1,1,1,0); // 
+	
+	instruction4bit(1,0,0,0,0,0);
+    instruction4bit(1,0,1,1,0,0); // 
 	
 	instruction4bit(1,0,0,0,0,1);
-    instruction4bit(1,0,0,0,1,0); // 12H
+    instruction4bit(1,0,1,1,0,0); // 
 	
 	instruction4bit(1,0,0,0,0,1);
-    instruction4bit(1,0,0,0,1,1); // 13H	
+    instruction4bit(1,0,0,0,0,0); //
 	
 
 }
@@ -629,21 +629,14 @@ void desenhar_bloco()
 }
 
 
-
-
 //Funcao do botao
 int pressButton(int pino)
-{
-	
+{	
 	return GPIORead(pino);
-
 }
 
 
-
-
-
-//
+//Funcao do contador de 1s para o score
 void tempoSegundos()
 {
 	clock_t inicio, espera;
@@ -690,8 +683,6 @@ int main(int argc, char *argv[])
 	}
 		
 	
-	
-	/*
 	for(;;)
 	{			
 		if(state == 0)// Texto de inicio
@@ -734,7 +725,7 @@ int main(int argc, char *argv[])
 					pause = !pause;
 				}
 				
-				/* o Que vai aparecer no LCD 
+				// o Que vai aparecer no LCD 
 				
 				instruction4bit(0,0,0,0,0,0); // Limpar Display 
 				instruction4bit(0,0,0,0,0,1);
@@ -744,8 +735,8 @@ int main(int argc, char *argv[])
 				desenhar_bloco();// Deslocar mensagem leva a tela toda
 				usleep(300); // em microsegundos				
 			}
-		*/
-		/*
+		
+		
 		else if(state == 2)// Pausar
 			{
 				if (pressButton() == 0) 
@@ -765,7 +756,7 @@ int main(int argc, char *argv[])
 				exit();
 				
 			}		
-	}*/
+	}
 		
 		printf("Finalizando programa, desconfigurando os Pinos....\n");
 		//unsetPins(); //Funcionando?
