@@ -246,7 +246,7 @@ void initialize4bit()
 void texto_press_start()
 {
 	instruction4bit(0,0,0,0,0,0); // Limpar Display 
-    instruction4bit(0,0,0,0,1,0);
+    instruction4bit(0,0,0,0,0,1);
 	
 	instruction4bit(0,0,0,0,0,0); // Home p/ Cursor
     instruction4bit(0,0,0,0,1,0);
@@ -313,7 +313,7 @@ void texto_press_start()
 void texto_game_over()
 {
 	instruction4bit(0,0,0,0,0,0); // Limpar Display 
-    instruction4bit(0,0,0,0,1,0);
+    instruction4bit(0,0,0,0,0,1);
 	
 	instruction4bit(0,0,0,0,0,0); // Home p/ Cursor
     instruction4bit(0,0,0,0,1,0);
@@ -478,9 +478,9 @@ void boneco()
 	instruction4bit(1,0,0,0,0,1);
     instruction4bit(1,0,0,0,1,1); // 13H	
 
-	
-	/* Pular */
 }
+
+
 
 //Deslocamento cursor a variar do sentido
 void desloc_cursor(int sentido)
@@ -488,12 +488,15 @@ void desloc_cursor(int sentido)
 	instruction4bit(0,0,0,0,0,1);
     instruction4bit(0,0,0,sentido,0,0); // 		1 para direita, 0 para esquerda
 }
+
 //Deslocamento mensagem a variar do sentido
 void desloc_mem(int sentido)
 {
 	instruction4bit(0,0,0,0,0,1);
     instruction4bit(0,0,1,sentido,0,0); // 		1 para direita, 0 para esquerda
 }
+
+
 
 //Error
 //Mostrar no LCD o boneco salvo
@@ -530,47 +533,100 @@ void desenhar_bloco()
 
 }
 
+//Funcao do botao
+void pressButton()
+{
+	
+}
+
 // Onde tudo começa
 // FPS 410 milisegundos 
 int main(int argc, char *argv[])
-{/*
+{
 	int state = 0;
+	boneco();// Cria o boneco customizado	
+	int tempo = 0;
+	bool pausar = false;
+	bool telaInit = false;
+	
+	for(;;;)
+	{			
+		if(state == 0)// Texto de inicio
+			{
+				tempo++;
+				if (tempo > 1) 
+				{
+					if (telaInit) 
+					{
+						texto_press_start( );
+					} else {
+						lcd.clear_display();
+					}
+					tempo = 0;
+					telaInit = !telaInit;
+                }
+				if (pressButton() == 0) {//Apertar o botao para começar
+					state = 1
+				}
+			}
 		
-	if(state == 0)		
-	{// Espera para apertar o botao e comecar o jogo
-		printf("Tela de Inicio\n"); // Comecar Piscando
-	}
-	
-	else if(state == 1)
-	{// Ativo durante a aplicacao
-		printf("jogatina\n"); //Dchecar movimentacao do boneco e deslocamento do obstaculo
-	}
-	
-	else if(state == 2)
-	{// Aconteceu a colisao do boneco com o obstaculo e pausa
-		printf("Game Over\n");
-	}
-	
-	/*Testando funcoes separadas*/
-	printf("Configurando a pinagem....\n");
-	setupPins();	
-	sleep(10);
-	
-	printf("Inicializando o LCD....\n");	
-	initialize4bit();
-	texto_press_start();
-	
-	printf("Teste Score....\n");
-	desenhar_score(5);	//Biblioteca time
-	
-	printf("Teste boneco....\n");
-	desenhar_Boneco();// Nao funfa
-	
-	printf("Teste bloco....\n");
-	desenhar_bloco();// Deslocar mensagem leva a tela toda
+		else if(state == 1)// Tempo de execucao
+			{				
+				if (pausar == false)
+				{
+					if(pressButton()== 1){
+						//Contador e desenhar bloco
+					}
+					
+				}
+				if  (pausar && pressButton() == 1) {//Apertar o botao para começar
+					pausar = !pausar;
+				}
+				
+				/* o Que vai aparecer no LCD */
+				instruction4bit(0,0,0,0,0,0); // Limpar Display 
+				instruction4bit(0,0,0,0,0,1);
+				
+				desenhar_score(  0  );//LEMBRAR da BIblioteca TIME.h
+				desenhar_Boneco();// Desenha o boneco
+				desenhar_bloco();// Deslocar mensagem leva a tela toda
+				usleep(300); // em microsegundos				
+			}
+		
+		else if(state == 2)
+			{
+				if pressButton() == 0 
+					{                      
+						state = 1;
+					}
+				
+			}
+		
+		
+		
+		/*Testando funcoes separadas*/	
+		
+		printf("Configurando a pinagem....\n");
+		setupPins();	
+		sleep(10);
+		
+		printf("Inicializando o LCD....\n");	
+		initialize4bit();
+		texto_press_start();
+		
+		printf("Teste Score....\n");
+		desenhar_score(5);	//Biblioteca time
+		
+		printf("Teste boneco....\n");
+		
+		desenhar_Boneco();// Desenha o boneco
+		
+		printf("Teste bloco....\n");
+		desenhar_bloco();// Deslocar mensagem leva a tela toda
 
-	sleep(10);	
-	
-	printf("Finalizando programa, desconfigurando os Pinos....\n");
-	unsetPins();
+		sleep(10);	
+		
+		printf("Finalizando programa, desconfigurando os Pinos....\n");
+		unsetPins();
+	}
 }
