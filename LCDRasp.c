@@ -579,7 +579,7 @@ int main(int argc, char *argv[])
 					}
 					
 				}
-				if  (pausar && pressButton() == 1) {//Apertar o botao para começar
+				if(pausar && pressButton() == 1) {//Apertar o botao para começar
 					pausar = !pausar;
 				}
 				
@@ -595,7 +595,7 @@ int main(int argc, char *argv[])
 		
 		else if(state == 2)
 			{
-				if pressButton() == 0 
+				if (pressButton() == 0) 
 					{                      
 						state = 1;
 					}
