@@ -571,11 +571,7 @@ void boneco()
 	
 	instruction4bit(1,0,0,0,0,1);
     instruction4bit(1,0,0,0,0,0); //
-	
-
 }
-
-
 
 //Deslocamento cursor a variar do sentido
 void desloc_cursor(int sentido)
@@ -614,7 +610,7 @@ void desenhar_bloco()
 	instruction4bit(0,0,0,0,0,0); // Home p/ Cursor
     instruction4bit(0,0,0,0,1,0);
 	
-	for(int i = 0; i < 55; i++)
+	for(int i = 0; i < 56; i++)
 	{
 		desloc_cursor(1);
 	}		
@@ -647,6 +643,13 @@ void tempoSegundos()
        while( (clock( ) - inicio) < espera ){};	
 }
 
+//Gerador randomico
+int randomBlock()  
+{
+        rand.seed(int(tempoSegundos()))
+        return rand.next(3) + 3
+}
+
 // Onde tudo começa
 // FPS 410 milisegundos 
 int main(int argc, char *argv[])
@@ -655,32 +658,21 @@ int main(int argc, char *argv[])
 	int tempo = 0;
 	int pause = 0;
 	int telaInit = 0;
-	int a = 0;
-
+	int ar = 0;
+	int ondebloco = 0;
+	int comprimentoBloco = randomBlock();
+	int animacao = 0;
+	int buttPulo = 0;
+	int buttPausa = 0;
+	int andar = 0;	
 	 
 	printf("Configurando a pinagem....\n");
 	setupPins();	
-	sleep(10);
+	sleep(3);
 	printf("Inicializando o LCD....\n");	
-	initialize4bit();
-	
-	printf("Teste boneco....\n");
-	boneco();// Cria o boneco customizado	
-	desenhar_Boneco();// Desenha o boneco
-	
-	printf("Teste bloco....\n");
-	desenhar_bloco();// Deslocar mensagem leva a tela toda	
-	
-	printf("Teste Score....\n");
-	for(int t = 0; t < 10; t++)
-	{
-		for(int k = 0; k < 10; k++)
-		{
-			tempoSegundos();
-			desenhar_score(k);
-			desenhar_score_Desena(t);	
-		}			
-	}
+	initialize4bit();	
+	printf("Criando boneco....\n");
+	boneco();// Cria o boneco customizado		
 		
 	
 	for(;;)
@@ -702,26 +694,45 @@ int main(int argc, char *argv[])
 					telaInit = !telaInit;
                 }
 				usleep(50000); // em microsegundos
-				if (pressButton() == 0) //Apertar o botao para começar
+				if (pressButton(5) == 0) //Apertar o botao para começar
 				{
 					state = 1;
 				}
 			}
 		
 		else if(state == 1)// Tempo de execucao
-			{				
-				if (pause == 0)
+			{		
+				if (pressButton(5) == 0 && !animacao)
 				{
-					if(pressButton()== 1){
+					buttPulo = 1;
+					animacao = 0;
+                }
+				
+				tempo = pressButton(19) == 0;
+				if (tempo && tempo != buttPausa) 
+				{
+					pause = !pause;
+                }
+				
+				buttPausa = tempo;
+						
+				if (pause != 0)
+				{
+					if(pressButton(5)== 1)
+					{
 						//Contador e desenhar bloco
 						if()//pulo e altura = mudar boneco
 						{
 							
 						}
 					}
+					if (pressButton(26) == 0) 
+						{
+							game_state = 0;
+                        }
 					
 				}
-				if(pause && pressButton() == 1) {//Apertar o botao para começar
+				if(pause && pressButton(5) == 1) {//Apertar o botao para começar
 					pause = !pause;
 				}
 				
@@ -730,16 +741,29 @@ int main(int argc, char *argv[])
 				instruction4bit(0,0,0,0,0,0); // Limpar Display 
 				instruction4bit(0,0,0,0,0,1);
 				
-				desenhar_score(  0  );//LEMBRAR da BIblioteca TIME.h
+				printf("Teste Score....\n");
+				for(int t = 0; t < 10; t++)
+				{
+					for(int k = 0; k < 10; k++)
+					{
+						tempoSegundos();
+						desenhar_score(k);
+						desenhar_score_Desena(t);	
+					}			
+				}
 				desenhar_Boneco();// Desenha o boneco
 				desenhar_bloco();// Deslocar mensagem leva a tela toda
-				usleep(300); // em microsegundos				
+				usleep(300); // em microsegundos	
+				if air > 0
+				{
+					button_pressed = false
+                }
 			}
 		
 		
 		else if(state == 2)// Pausar
 			{
-				if (pressButton() == 0) 
+				if (pressButton(5) == 0) 
 					{                      
 						state = 1;
 					}				
@@ -753,8 +777,7 @@ int main(int argc, char *argv[])
 				texto_game_over();
 				
 				return(0);
-				exit();
-				
+								
 			}		
 	}
 		
